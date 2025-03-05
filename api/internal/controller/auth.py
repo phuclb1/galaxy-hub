@@ -8,7 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from core.settings import settings
 from internal.common.exceptions.common import ExceptionUnauthorized
 from internal.common.types import ID
-from internal.common.schemas.user import UserBase, CreateUserRequest, UserInfo, UserLoginRequest
+from internal.common.schemas.user import UserBase, UserInfo, UserLoginRequest
 from internal.repository.registry import Registry
 
 
@@ -22,10 +22,7 @@ class AuthController:
         async def _verify_and_generate_token(session: AsyncSession):
             user = await self.repo.user_repo().get_user_by_email(session, user_req.email)
             if user is None:
-                # Create user
-                create_user_request = CreateUserRequest(
-                    **user_req.model_dump())
-                user = await self.repo.user_repo().create_user(session, create_user_request)
+                return None, None
 
             auth_token = user.gen_jwt()
             hashed_token = hashlib.sha256(

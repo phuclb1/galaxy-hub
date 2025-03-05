@@ -16,7 +16,6 @@ class AuthGateway(metaclass=SingletonMeta):
             google_url, headers=headers, timeout=10)
         status_code = user_response.status_code
         user_data = user_response.json()
-        user_data["role"] = "USER"
         logger.info(f"Google user response: {user_data} - {status_code}")
 
         return user_data

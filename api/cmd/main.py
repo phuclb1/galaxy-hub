@@ -31,7 +31,7 @@ class App:
             user_controller = UserController(registry)
             auth_controller = AuthController(registry)
 
-            AuthMiddleware.init(auth_controller)
+            AuthMiddleware().init(auth_controller)
 
             auth_handler = AuthHandler(auth_controller)
             user_handler = UserHandler(user_controller)

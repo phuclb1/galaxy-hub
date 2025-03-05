@@ -1,11 +1,9 @@
-from datetime import datetime
-
 from snowflake import SnowflakeGenerator
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from core.settings import settings
-from internal.common.exceptions.user import ExceptionUserNotFound, ExceptionUserDeleted
+from internal.common.exceptions.user import ExceptionUserNotFound
 from internal.common.schemas.user import (
     CreateUserRequest,
     UpdateUserRequest,
@@ -33,7 +31,6 @@ class UserRepository:
             name=create_request.name,
             role=create_request.role,
             email=create_request.email,
-            picture=create_request.picture,
         )
         user.raw_password = create_request.password
         session.add(user)

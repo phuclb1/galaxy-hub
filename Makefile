@@ -1,5 +1,5 @@
 ifndef PROJECT_NAME
-PROJECT_NAME := ai-lab
+PROJECT_NAME := galaxy-hub
 endif
 
 ifndef DOCKER_BIN

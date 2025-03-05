@@ -4,7 +4,7 @@ from loguru import logger
 
 from internal.common.exceptions.common import ExceptionUnauthorized
 from internal.common.schemas.user import (
-    UserBase, UserInfo, UserLoginRequest, UserRole, LoginResponse
+    UserBase, UserInfo, UserLoginRequest, LoginResponse
 )
 from internal.controller.auth import AuthController
 from internal.gateway.auth_gw import AuthGateway
@@ -20,11 +20,16 @@ class AuthHandler:
         self.controller = controller
         self.auth_gw = AuthGateway()
 
-    async def login_with_payload(self, payload: dict):
+    async def login_with_payload(self, payload: dict) -> LoginResponse:
         user_base = UserBase(**payload)
         user, hashed_token = await self.controller.verify_and_generate_token(
             user_base)
-        return user, hashed_token
+        if user is None:
+            return LoginResponse(need_register=True)
+        return LoginResponse(
+            user=user,
+            access_token=hashed_token
+        )
 
     @exception_handler
     async def login_google(
@@ -32,17 +37,14 @@ class AuthHandler:
         token: str,
     ):
         payload = self.auth_gw.get_google_user(token)
-        user, hashed_token = await self.login_with_payload(payload)
-        return LoginResponse(user=user, access_token=hashed_token)
+        return await self.login_with_payload(payload)
 
     @exception_handler
     async def login_with_ms(self, token: str):
         payload = jwt.decode(token, options={"verify_signature": False})
         payload["email"] = payload["unique_name"]
-        payload["role"] = UserRole.USER
         payload["ms_id"] = payload["oid"]
-        user, hashed_token = await self.login_with_payload(payload)
-        return LoginResponse(user=user, access_token=hashed_token)
+        return await self.login_with_payload(payload)
 
     @exception_handler
     async def login_with_password(
@@ -50,8 +52,7 @@ class AuthHandler:
         req: UserLoginRequest
     ):
         authenticated_user = await self.controller.authen_with_password(req)
-        user, hashed_token = await self.login_with_payload(authenticated_user.model_dump())
-        return LoginResponse(user=user, access_token=hashed_token)
+        return await self.login_with_payload(authenticated_user.model_dump())
 
     @exception_handler
     async def logout(

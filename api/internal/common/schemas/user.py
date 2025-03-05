@@ -1,4 +1,3 @@
-from datetime import datetime
 from typing import Optional, List
 
 from fastapi import Query
@@ -16,9 +15,8 @@ USER_PASSWORD = "User password"
 class UserBase(BaseModel):
     name: str = Field("", description=USER_NAME)
     email: str = Field("", description="User email")
-    picture: Optional[str] = Field(None, description="User picture")
-    role: Optional[UserRole] = Field(
-        description=USER_ROLE)
+    role: Optional[UserRole] = Field(None,
+                                     description=USER_ROLE)
 
 
 class CreateUserRequest(UserBase):
@@ -34,8 +32,8 @@ class UpdateUserRequest(BaseModel):
 class UserInfo(UserBase):
     id: ID = Field(None, description="User ID")
     hashed_token: Optional[str] = Field(None, description="User hashed token")
-    created_at: datetime = Field(None, description="User created at")
-    updated_at: datetime = Field(None, description="User updated at")
+    created_at: int = Field(None, description="User created at")
+    updated_at: int = Field(None, description="User updated at")
 
 
 class ListUserRequest(PagingRequest):
@@ -53,5 +51,6 @@ class UserLoginRequest(BaseModel):
 
 
 class LoginResponse(BaseModel):
-    user: UserInfo
-    access_token: str
+    user: Optional[UserInfo] = Field(None, description="User info")
+    access_token: Optional[str] = Field(None, description="Access token")
+    need_register: Optional[bool] = Field(None, description="Need register")

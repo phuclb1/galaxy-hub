@@ -42,10 +42,6 @@ class AppSettings(BaseAppSettings):
     token_exp_minutes: Optional[int] = 1440
     cache_user_need_relogin: Optional[str] = "need-relogin"
 
-    # azure blob storage
-    azure_connection_string: Optional[str] = None
-    azure_container: str
-
     deployment_env: str
 
     # paging

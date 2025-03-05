@@ -33,7 +33,6 @@ class User(Base):
     raw_password: Mapped[str] = mapped_column(String(255))
     name: Mapped[str] = mapped_column(String())
     email: Mapped[str] = mapped_column(String(), unique=True)
-    picture: Mapped[str] = mapped_column(String())
     role: Mapped[UserRole] = mapped_column(String())
     created_at: Mapped[datetime] = mapped_column(DateTime(),
                                                  default=datetime.now(), nullable=False)
@@ -57,10 +56,9 @@ class User(Base):
             id=self.id,
             name=self.name,
             email=self.email,
-            picture=self.picture,
             role=self.role,
-            created_at=self.created_at,
-            updated_at=self.updated_at
+            created_at=int(self.created_at.timestamp() * 1000),
+            updated_at=int(self.updated_at.timestamp() * 1000),
         )
 
     def authenticate(self, password: str):

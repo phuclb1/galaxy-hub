@@ -8,3 +8,4 @@ disable=
     R0913, # too-many-arguments
     R0801, # duplicate-code
     E1136, # unsubscriptable-object
+    W0719, # broad-exception-raised
