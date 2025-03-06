@@ -21,7 +21,7 @@ export function HeaderBlock() {
                 <Image
                   alt="Home"
                   height={64}
-                  src="/images/logo.jpg"
+                  src="/images/galaxy.svg"
                   width={64}
                 />
               </div>
