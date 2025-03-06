@@ -4,7 +4,6 @@ import { AvatarDropdown } from "./AvatarDropdown";
 import { ComponentPropsWithRef } from "react";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "../ui/button";
-import { BackButton } from "./BackButton";
 
 const SHOW_AVATAR_NAME = true;
 

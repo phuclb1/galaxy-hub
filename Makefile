@@ -10,12 +10,12 @@ ifndef DOCKER_COMPOSE_BIN
 DOCKER_COMPOSE_BIN := docker compose
 endif
 
-GOOGLE_CLIENT_ID := "82625263482-doqgh53hcmgkvh2talprr42q8qmhfbau.apps.googleusercontent.com"
-GOOGLE_CLIENT_SECRET := "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"
+GOOGLE_CLIENT_ID := 
+GOOGLE_CLIENT_SECRET := 
  
 NEXTAUTH_SECRET := "6S/O3NU4UXpxXyIsxmTqEASV9NC1kGPSixqDvvNAigM="
-BACKEND_API_URL := "http://localhost:18001"
-NEXTAUTH_URL := "http://localhost:3000"
+BACKEND_API_URL :=
+NEXTAUTH_URL := 
 
 COMPOSE := PROJECT_NAME=${PROJECT_NAME} ${DOCKER_COMPOSE_BIN} -f build/compose/docker-compose.yml --env-file build/compose/.env
 COMPOSE_PROD := PROJECT_NAME=${PROJECT_NAME} PORT=8000 PG_PORT=8001 ${DOCKER_COMPOSE_BIN} -f build/compose/docker-compose.prod.yml

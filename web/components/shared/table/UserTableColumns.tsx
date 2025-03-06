@@ -1,4 +1,3 @@
-import { AuthGuardClient } from "@/components/shared/AuthGuardClient";
 import { ConfirmPopover } from "@/components/shared/ConfirmPopover";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -7,14 +6,12 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { ROUTE } from "@/lib/constants";
 import { api } from "@/protocol/trpc/client";
 import { createColumnHelper } from "@tanstack/react-table";
-import { Pencil, RotateCcw, Trash2 } from "lucide-react";
+import { Pencil, Trash2 } from "lucide-react";
 import { User } from "next-auth";
 import Link from "next/link";
 import { toast } from "sonner";
-import dayjs from "dayjs";
 
 const col = createColumnHelper<User>();
 

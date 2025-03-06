@@ -1,4 +1,3 @@
-type Id = string | number;
 export const ROUTE = {
   HOME: {
     root: { path: "/home", title: "Home" },
