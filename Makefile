@@ -15,7 +15,7 @@ GOOGLE_CLIENT_SECRET := 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
  
 NEXTAUTH_SECRET := "6S/O3NU4UXpxXyIsxmTqEASV9NC1kGPSixqDvvNAigM="
 BACKEND_API_URL := http://api:8000
-NEXTAUTH_URL := http://103.17.140.157:8002
+NEXTAUTH_URL := https://galaxy-hub.moondev.cc
 
 COMPOSE := PROJECT_NAME=${PROJECT_NAME} ${DOCKER_COMPOSE_BIN} -f build/compose/docker-compose.yml --env-file build/compose/.env
 COMPOSE_PROD := PROJECT_NAME=${PROJECT_NAME} PORT=8000 PG_PORT=8001 WEB_PORT=8002 ${DOCKER_COMPOSE_BIN} -f build/compose/docker-compose.prod.yml
