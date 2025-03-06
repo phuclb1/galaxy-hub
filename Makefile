@@ -10,15 +10,15 @@ ifndef DOCKER_COMPOSE_BIN
 DOCKER_COMPOSE_BIN := docker compose
 endif
 
-GOOGLE_CLIENT_ID := 
-GOOGLE_CLIENT_SECRET := 
+GOOGLE_CLIENT_ID := 82625263482-doqgh53hcmgkvh2talprr42q8qmhfbau.apps.googleusercontent.com 
+GOOGLE_CLIENT_SECRET := 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
  
 NEXTAUTH_SECRET := "6S/O3NU4UXpxXyIsxmTqEASV9NC1kGPSixqDvvNAigM="
-BACKEND_API_URL :=
-NEXTAUTH_URL := 
+BACKEND_API_URL := http://api:8000
+NEXTAUTH_URL := http://103.17.140.157:8002
 
 COMPOSE := PROJECT_NAME=${PROJECT_NAME} ${DOCKER_COMPOSE_BIN} -f build/compose/docker-compose.yml --env-file build/compose/.env
-COMPOSE_PROD := PROJECT_NAME=${PROJECT_NAME} PORT=8000 PG_PORT=8001 ${DOCKER_COMPOSE_BIN} -f build/compose/docker-compose.prod.yml
+COMPOSE_PROD := PROJECT_NAME=${PROJECT_NAME} PORT=8000 PG_PORT=8001 WEB_PORT=8002 ${DOCKER_COMPOSE_BIN} -f build/compose/docker-compose.prod.yml
 API_COMPOSE := ${COMPOSE} run --name ${PROJECT_NAME}_api --rm --service-ports -w /api api
 BASE_IMAGE := ${PROJECT_NAME}/backend:base
 build-base-image:
@@ -67,7 +67,6 @@ build-be-prod:
 	$(DOCKER_BIN) build -t $(PROJECT_NAME)/backend:1.0 \
 	--build-arg BASE_IMAGE=${BASE_IMAGE} \
 	-f build/api.Dockerfile .
-	-${DOCKER_BIN} images -q -f "dangling=true" | xargs ${DOCKER_BIN} rmi -f
 
 build-fe-prod:
 	$(DOCKER_BIN) build \
@@ -76,8 +75,7 @@ build-fe-prod:
       --build-arg BACKEND_API_URL=${BACKEND_API_URL} \
       --build-arg GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID} \
       --build-arg GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET} \
-      --file build/web.Dockerfile -t $(PROJECT_NAME)/backend:1.0 .
-	-${DOCKER_BIN} images -q -f "dangling=true" | xargs ${DOCKER_BIN} rmi -f
+      --file build/web.Dockerfile -t $(PROJECT_NAME)/frontend:1.0 .
 
 run-prod:
-	${COMPOSE_PROD} up -d pg redis pg-migrate api web
+	${COMPOSE_PROD} up -d pg redis api web
