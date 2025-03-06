@@ -1,5 +1,6 @@
 "use client";
 
+import * as React from "react";
 import * as LabelPrimitive from "@radix-ui/react-label";
 import { Slot } from "@radix-ui/react-slot";
 import {
@@ -10,9 +11,9 @@ import {
   FormProvider,
   useFormContext,
 } from "react-hook-form";
+
 import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
-import { ComponentPropsWithRef, createContext, useContext, useId } from "react";
 
 const Form = FormProvider;
 
@@ -23,8 +24,8 @@ type FormFieldContextValue<
   name: TName;
 };
 
-const FormFieldContext = createContext<FormFieldContextValue>(
-  {} as FormFieldContextValue,
+const FormFieldContext = React.createContext<FormFieldContextValue>(
+  {} as FormFieldContextValue
 );
 
 const FormField = <
@@ -39,8 +40,8 @@ const FormField = <
 );
 
 const useFormField = () => {
-  const fieldContext = useContext(FormFieldContext);
-  const itemContext = useContext(FormItemContext);
+  const fieldContext = React.useContext(FormFieldContext);
+  const itemContext = React.useContext(FormItemContext);
   const { getFieldState, formState } = useFormContext();
 
   const fieldState = getFieldState(fieldContext.name, formState);
@@ -65,24 +66,29 @@ type FormItemContextValue = {
   id: string;
 };
 
-const FormItemContext = createContext<FormItemContextValue>(
-  {} as FormItemContextValue,
+const FormItemContext = React.createContext<FormItemContextValue>(
+  {} as FormItemContextValue
 );
 
-const FormItem = ({ className, ...props }: ComponentPropsWithRef<"div">) => {
-  const id = useId();
+const FormItem = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => {
+  const id = React.useId();
 
   return (
     <FormItemContext.Provider value={{ id }}>
-      <div className={cn("space-y-2", className)} {...props} />
+      <div className={cn("space-y-2", className)} ref={ref} {...props} />
     </FormItemContext.Provider>
   );
-};
+});
+// @ts-expect-error type override
+FormItem.displayName = "FormItem";
 
 const FormLabel = ({
   className,
   ...props
-}: ComponentPropsWithRef<typeof LabelPrimitive.Root>) => {
+}: React.ComponentPropsWithRef<typeof LabelPrimitive.Root>) => {
   const { error, formItemId } = useFormField();
 
   return (
@@ -94,7 +100,9 @@ const FormLabel = ({
   );
 };
 
-const FormControl = ({ ...props }: ComponentPropsWithRef<typeof Slot>) => {
+const FormControl = ({
+  ...props
+}: React.ComponentPropsWithoutRef<typeof Slot>) => {
   const { error, formItemId, formDescriptionId, formMessageId } =
     useFormField();
 
@@ -115,7 +123,7 @@ const FormControl = ({ ...props }: ComponentPropsWithRef<typeof Slot>) => {
 const FormDescription = ({
   className,
   ...props
-}: ComponentPropsWithRef<"p">) => {
+}: React.HTMLAttributes<HTMLParagraphElement>) => {
   const { formDescriptionId } = useFormField();
 
   return (
@@ -131,7 +139,7 @@ const FormMessage = ({
   className,
   children,
   ...props
-}: ComponentPropsWithRef<"p">) => {
+}: React.HTMLAttributes<HTMLParagraphElement>) => {
   const { error, formMessageId } = useFormField();
   const body = error ? String(error?.message) : children;
 

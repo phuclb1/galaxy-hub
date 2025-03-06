@@ -38,7 +38,7 @@ interface ContextOpts {
 }
 
 export async function createTRPCContext(
-  opts: ContextOpts,
+  opts: ContextOpts
 ): Promise<ContextOpts & Context> {
   let user;
   let access_token;
@@ -98,9 +98,8 @@ export const publicProcedure = t.procedure;
 
 export const authedProcedure = t.procedure.use((opts) => {
   const { ctx } = opts;
-  const { access_token } = ctx;
-  // TODO: more stringent checks
-  if (!access_token?.length)
+
+  if (!ctx.access_token?.length)
     throw new TRPCError({
       code: "UNAUTHORIZED",
     });

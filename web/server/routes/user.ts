@@ -1,40 +1,40 @@
-import { z } from "zod";
-import { authedProcedure, publicProcedure, router } from "../trpc";
+import { authedProcedure, router } from "../trpc";
 import { ky } from "@/protocol";
 import { paginationSchema } from "@/lib/schemas/params";
-import { url } from "@/protocol/ky";
-import { UserList, userFormSchema, User } from "@/types/user";
+import { ApiList } from "@/lib/types";
+import { User } from "next-auth";
+import {
+  userCreateSchema,
+  userSchema,
+  userUpdateSchema,
+} from "@/lib/schemas/user";
+import { z } from "zod";
 
 export const userRouter = router({
-  list: authedProcedure
-    .input(
-      paginationSchema.extend({
-        query: z.string().optional(),
-      }),
-    )
-    .query(async ({ input: params }) => {
-      console.log(params)
-      const res = await ky.get<UserList>(url("/users", params));
-      return res;
-    }),
-  create: publicProcedure
-    .input(userFormSchema)
-    .mutation(async ({ input: user }) => {
-      const res = await ky.post<User, User>("/users", user);
-      return res;
-    }
+  list: authedProcedure.input(paginationSchema).query(async ({ input }) => {
+    const { page_size: page_size, page: page, query } = input;
+    return ky.get<ApiList<User, "users">>({
+      url: "/users",
+      params: { page_size, page, query },
+    });
+  }),
+  detail: authedProcedure
+    .input(userSchema.pick({ id: true }))
+    .query(async ({ input }) => ky.get<User>(`/users/${input.id}`)),
+  create: authedProcedure
+    .input(userCreateSchema)
+    .mutation(async ({ input }) => ky.post<User>("/users", input)),
+  delete: authedProcedure
+    .input(z.object({ ids: userSchema.shape.id.array() }))
+    .mutation(async ({ input }) =>
+      ky.delete({ url: "/users", params: { ids: input.ids } })
     ),
   update: authedProcedure
-    .input(z.object({ id: z.string(), body: userFormSchema }))
-    .mutation(async ({ input: { id, body } }) => {
-      const res = await ky.put<User, User>(`/users/${id}`, body);
-      return res;
-    }),
-  delete: authedProcedure
-    .input(z.string())
-    .mutation(async ({ input: id }) => {
-      const res = await ky.delete<null>(url("/users", { ids: [id] }));
-      console.log("RES", res)
-      return res;
-    }),
+    .input(userUpdateSchema)
+    .mutation(async ({ input }) => ky.put<User>(`/users/${input.id}`, input)),
+  resetPassword: authedProcedure
+    .input(userSchema.pick({ id: true }))
+    .mutation(async ({ input }) =>
+      ky.post<{ message: string }>(`/reset-pass/${input.id}`)
+    ),
 });

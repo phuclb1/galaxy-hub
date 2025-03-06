@@ -8,6 +8,7 @@ import uvicorn
 from core.database.postgres import create_pg_engine
 from core.settings import settings
 from tools.uts_scheduler import scheduler
+from internal.common.schemas.user import CreateUserRequest, UserRole
 from internal.handler.auth import AuthHandler
 from internal.handler.user import UserHandler
 from internal.controller.auth import AuthController
@@ -30,6 +31,16 @@ class App:
 
             user_controller = UserController(registry)
             auth_controller = AuthController(registry)
+            try:
+                await user_controller.create_user(CreateUserRequest(
+                    email="admin@test.com",
+                    password="123456aA@",
+                    name="ADMIN",
+                    role=UserRole.BLD
+                ))
+                logger.info("Admin user is created!")
+            except:
+                logger.info("Admin user is existed!")
 
             AuthMiddleware().init(auth_controller)
 

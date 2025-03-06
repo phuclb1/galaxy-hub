@@ -74,7 +74,7 @@ export function AvatarDropdown({
 
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem>
+        <DropdownMenuItem className="cursor-pointer">
           <UserIcon />
           Profile
         </DropdownMenuItem>
@@ -91,7 +91,11 @@ export function AvatarDropdown({
                 value={locale}
               >
                 {langOptions.map(({ value, label }) => (
-                  <DropdownMenuRadioItem key={value} value={value}>
+                  <DropdownMenuRadioItem
+                    className="cursor-pointer"
+                    key={value}
+                    value={value}
+                  >
                     {label}
                   </DropdownMenuRadioItem>
                 ))}
@@ -110,6 +114,7 @@ export function AvatarDropdown({
         <DropdownMenuRadioGroup onValueChange={setTheme} value={theme}>
           {themeOptions.map(({ value, label }) => (
             <DropdownMenuRadioItem
+              className="cursor-pointer"
               key={value}
               onSelect={(e) => {
                 e.preventDefault();
@@ -122,7 +127,7 @@ export function AvatarDropdown({
         </DropdownMenuRadioGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem
-          className="focus:bg-destructive focus:text-destructive-foreground"
+          className="cursor-pointer focus:bg-destructive focus:text-destructive-foreground"
           onSelect={() => {
             signOut();
           }}

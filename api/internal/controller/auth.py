@@ -22,7 +22,7 @@ class AuthController:
         async def _verify_and_generate_token(session: AsyncSession):
             user = await self.repo.user_repo().get_user_by_email(session, user_req.email)
             if user is None:
-                return None, None
+                raise ExceptionUnauthorized
 
             auth_token = user.gen_jwt()
             hashed_token = hashlib.sha256(

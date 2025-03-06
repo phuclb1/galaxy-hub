@@ -1,6 +1,7 @@
 "use client";
 
 import { Button, ButtonProps } from "@/components/ui/button";
+import { IconGoogle } from "@/public/icons/IconGoogle";
 import { useMutation } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { signIn } from "next-auth/react";
@@ -34,7 +35,8 @@ export function GoogleLoginButton({
       }}
       {...props}
     >
-      {isPending ? <Loader2 className="animate-spin" /> : null} Login with Google
+      {isPending ? <Loader2 className="animate-spin" /> : <IconGoogle />} Login
+      with Google
     </Button>
   );
 }

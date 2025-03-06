@@ -1,3 +1,4 @@
+from datetime import datetime
 from snowflake import SnowflakeGenerator
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -31,6 +32,8 @@ class UserRepository:
             name=create_request.name,
             role=create_request.role,
             email=create_request.email,
+            created_at=datetime.now(),
+            updated_at=datetime.now()
         )
         user.raw_password = create_request.password
         session.add(user)

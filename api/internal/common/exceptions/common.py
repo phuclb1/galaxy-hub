@@ -22,6 +22,11 @@ class ExceptionUnauthorized(XBaseException):
         super().__init__(status_code=401, message="Unauthorized")
 
 
+class ExceptionAccountNotRegistered(XBaseException):
+    def __init__(self):
+        super().__init__(status_code=400, message="User is not registered")
+
+
 class ExceptionForbidden(XBaseException):
     def __init__(self):
         super().__init__(status_code=403, message="Forbidden")

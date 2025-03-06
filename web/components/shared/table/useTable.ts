@@ -1,5 +1,6 @@
 "use client";
 
+import { useControllableState } from "@radix-ui/react-use-controllable-state";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -7,12 +8,12 @@ import {
   OnChangeFn,
   PaginationState,
   RowSelectionState,
+  Updater,
   getCoreRowModel,
   getFilteredRowModel,
-  getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { useState } from "react";
+import { useCallback, useMemo } from "react";
 
 interface Props<TData> {
   /**
@@ -22,15 +23,16 @@ interface Props<TData> {
    * const { userList } = useUsers();
    * const data = useMemo(() => userList ?? [], [userList]);
    *
-   * const { table } = useTable({ data, columns, });
+   * const { table } = useTable({ data, columns, .. });
    * ```
    *
    * @link https://github.com/TanStack/table/issues/4566
    * */
   data: TData[];
-  columns: ColumnDef<TData, unknown>[];
-  pageCount?: number;
-  initialState?: InitialTableState | undefined;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  columns: ColumnDef<TData, any>[];
+  total?: number;
+  initialState?: InitialTableState;
   columnFilters?: {
     columnFilters: ColumnFiltersState;
     setColumnFilters: OnChangeFn<ColumnFiltersState> | undefined;
@@ -45,24 +47,59 @@ interface Props<TData> {
   };
 }
 
+const DEFAULT = {
+  pagination: { pageIndex: 1, pageSize: 15 } satisfies PaginationState,
+  columnFilters: [] satisfies ColumnFiltersState,
+  rowSelection: {} satisfies RowSelectionState,
+};
+
 export function useTable<TData>({
   data,
   columns,
   initialState,
-  pageCount,
+  total: rowCount,
   columnFilters: controlledColumnFilters,
   rowSelection: controlledRowSelection,
   pagination: controlledPagination,
 }: Props<TData>) {
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(
-    initialState?.columnFilters ?? [],
+  const [pagination, onPaginationChange] = useInternalState({
+    prop: controlledPagination?.pagination,
+    onChange: controlledPagination?.setPagination,
+    defaultProp: DEFAULT.pagination,
+  });
+
+  const zeroBasedPagination = useMemo(
+    () => ({
+      pageIndex: pagination.pageIndex - 1,
+      pageSize: pagination.pageSize,
+    }),
+    [pagination]
   );
-  const [rowSelection, setRowSelection] = useState<RowSelectionState>(
-    initialState?.rowSelection ?? {},
+  const zeroBasedOnPaginationChange = useCallback(
+    (updater: Updater<PaginationState>) => {
+      // 1-based to 0-based conversion
+      if (typeof updater === "function") {
+        onPaginationChange((old) => {
+          const { pageIndex, pageSize } = updater(old);
+          return { pageIndex: pageIndex - 1, pageSize };
+        });
+      } else {
+        const { pageIndex, pageSize } = updater;
+        onPaginationChange({ pageSize, pageIndex: pageIndex - 1 });
+      }
+    },
+    [onPaginationChange]
   );
-  const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: initialState?.pagination?.pageIndex ?? 0,
-    pageSize: initialState?.pagination?.pageSize ?? 10,
+
+  const [columnFilters, onColumnFiltersChange] = useInternalState({
+    prop: controlledColumnFilters?.columnFilters,
+    onChange: controlledColumnFilters?.setColumnFilters,
+    defaultProp: DEFAULT.columnFilters,
+  });
+  const [rowSelection, onRowSelectionChange] = useInternalState({
+    prop: controlledRowSelection?.rowSelection,
+    onChange: controlledRowSelection?.setRowSelection,
+    defaultProp: DEFAULT.rowSelection,
   });
 
   const table = useReactTable({
@@ -78,29 +115,53 @@ export function useTable<TData>({
     // since we want full JSON data on all events
     getRowCanExpand: () => true,
     getCoreRowModel: getCoreRowModel(),
-
     getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: !controlledPagination
-      ? getPaginationRowModel()
-      : undefined,
-    pageCount,
+    manualPagination: true,
+
+    rowCount,
 
     // pass state to let the hook manage data
-    onColumnFiltersChange:
-      controlledColumnFilters?.setColumnFilters ?? setColumnFilters,
-    onRowSelectionChange:
-      controlledRowSelection?.setRowSelection ?? setRowSelection,
-    onPaginationChange: controlledPagination?.setPagination ?? setPagination,
-    manualPagination: !!controlledPagination,
-
+    onColumnFiltersChange,
+    onRowSelectionChange,
+    onPaginationChange: zeroBasedOnPaginationChange,
+    // if we want to override initial state
     initialState,
 
     state: {
-      columnFilters: controlledColumnFilters?.columnFilters ?? columnFilters,
-      rowSelection: controlledRowSelection?.rowSelection ?? rowSelection,
-      pagination: controlledPagination?.pagination ?? pagination,
+      columnFilters,
+      rowSelection,
+      // 1-based to 0-based conversion
+      pagination: zeroBasedPagination,
     },
   });
 
   return { table };
+}
+
+type UseControllableStateParams<T> = {
+  prop?: T | undefined;
+  defaultProp: T;
+  onChange?: (state: T) => void;
+};
+function useInternalState<T>({
+  prop,
+  defaultProp,
+  onChange,
+}: UseControllableStateParams<T>) {
+  const [state, _setState] = useControllableState({
+    prop,
+    defaultProp,
+    onChange,
+  });
+  const setState = (updater: Updater<T>) =>
+    _setState((old) => {
+      // NOTE: noop if previous value is undefined
+      // should not happen as we get a type error if we don't pass defaultProp
+      if (!old) {
+        return;
+      }
+      return updater instanceof Function ? updater(old) : updater;
+    });
+
+  return [state as T, setState] as const;
 }

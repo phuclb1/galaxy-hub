@@ -1,6 +1,5 @@
 // import GithubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
-import AzureADProvider from "next-auth/providers/azure-ad";
 import GoogleProvider from "next-auth/providers/google";
 import type { NextAuthOptions, Session, User } from "next-auth";
 import { env } from "@/env";
@@ -42,7 +41,7 @@ export const authLogic: NextAuthOptions = {
             body: JSON.stringify(credentials),
             headers: { "Content-Type": "application/json" },
             throwHttpErrors: false,
-          },
+          }
         );
 
         const jsoned = await res.json<Session>();
@@ -78,7 +77,7 @@ export const authLogic: NextAuthOptions = {
             access_token: string;
             user: User;
           }>(
-            `${env.BACKEND_API_URL}/api/v1/auth/login/google?token=${account.access_token}`,
+            `${env.BACKEND_API_URL}/api/v1/auth/login/google?token=${account.access_token}`
           )
           .json();
         token.access_token = res.access_token;

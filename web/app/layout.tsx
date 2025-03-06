@@ -2,7 +2,7 @@ import "./globals.css";
 
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { AppProvider } from "@/components/shared/AppProvider";
+import { AppProvider } from "@/components/shared/providers/AppProvider";
 import { getLocale, getMessages } from "next-intl/server";
 import { cn } from "@/lib/utils";
 
@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Techvify",
+  title: "Galaxy Academy",
   description: "Powered by Techvify",
 };
 
@@ -32,7 +32,7 @@ export default async function RootLayout({
         className={cn(
           geistSans.variable,
           geistMono.variable,
-          "h-screen antialiased",
+          "h-screen antialiased"
         )}
       >
         <main className="flex h-full flex-col">
