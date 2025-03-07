@@ -81,7 +81,7 @@ class User(Base):
 
 class UserFilterSet(FilterSet):
     query = SearchFilter(User.name, User.email)
-    role = InFilter(field=User.role)
+    roles = InFilter(field=User.role)
     ordering = OrderingFilter(
         name=OrderingField(User.name),
         email=OrderingField(User.email),

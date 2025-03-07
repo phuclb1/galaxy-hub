@@ -4,6 +4,8 @@ import { AvatarDropdown } from "./AvatarDropdown";
 import { ComponentPropsWithRef } from "react";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "../ui/button";
+import { ArrowDown } from "lucide-react";
+import { PageTitle } from "./HeaderTitle";
 
 const SHOW_AVATAR_NAME = true;
 
@@ -20,7 +22,9 @@ export async function HomeHeader({
       )}
       {...props}
     >
-      <div className="inline-flex gap-1"></div>
+      <div className="inline-flex gap-1">
+        <PageTitle />
+      </div>
 
       <div className="flex gap-1">
         {session?.user ? (
@@ -32,9 +36,9 @@ export async function HomeHeader({
             showName={SHOW_AVATAR_NAME}
             user={session.user}
           >
-            <UserAvatar className="h-9 w-9" user={session.user} />
+            <UserAvatar className="h-10 w-10" user={session.user} />
 
-            <div className="flex flex-col">
+            <div className="flex flex-col text-[14px]">
               <span>{SHOW_AVATAR_NAME ? session.user.name : null}</span>
               <span className="text-[10px]">{session.user.role}</span>
             </div>

@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/sidebar";
 import { ROUTE } from "@/lib/constants";
 import { UserRole } from "@/lib/schemas/user";
-import { Calendar, Home, LucideIcon, Minus, Plus } from "lucide-react";
+import { BookOpenText, Home, LucideIcon, Minus, Plus } from "lucide-react";
 import Link from "next/link";
 import { ComponentPropsWithRef, useState } from "react";
 import { AuthGuardClient } from "../AuthGuardClient";
@@ -33,27 +33,11 @@ type NavItem = {
 const navMain: NavItem[] = [
   {
     title: ROUTE.HOME.humanresource.root.title,
-    icon: Calendar,
+    icon: BookOpenText,
     items: [
       {
         title: ROUTE.HOME.humanresource.root.title,
         url: ROUTE.HOME.humanresource.root.path,
-      },
-      {
-        title: ROUTE.HOME.coachmanagement.root.title,
-        url: ROUTE.HOME.coachmanagement.root.path,
-      },
-      {
-        title: ROUTE.HOME.managermanagement.root.title,
-        url: ROUTE.HOME.managermanagement.root.path,
-      },
-      {
-        title: ROUTE.HOME.studentmanagement.root.title,
-        url: ROUTE.HOME.studentmanagement.root.path,
-      },
-      {
-        title: ROUTE.HOME.teammanagement.root.title,
-        url: ROUTE.HOME.teammanagement.root.path,
       },
     ],
   },

@@ -6,11 +6,13 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { ROUTE } from "@/lib/constants";
 import { api } from "@/protocol/trpc/client";
 import { createColumnHelper } from "@tanstack/react-table";
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil, RotateCcw, Trash2 } from "lucide-react";
 import { User } from "next-auth";
 import Link from "next/link";
+import { useEffect, useRef } from "react";
 import { toast } from "sonner";
 
 const col = createColumnHelper<User>();
@@ -21,8 +23,19 @@ export const tableColumns = [
     header: ({ table }) => {
       const isAllUsersSelected = table.getIsAllRowsSelected();
       const isSelectedAllUsersChange = table.getToggleAllRowsSelectedHandler();
+      const isSomeUsersSelected = table.getIsSomeRowsSelected();
+
+      const headerCheckboxRef = useRef<HTMLInputElement>(null);
+
+      useEffect(() => {
+        if (headerCheckboxRef.current) {
+          headerCheckboxRef.current.indeterminate = isSomeUsersSelected;
+        }
+      }, [isSomeUsersSelected]);
+
       return (
         <input
+          ref={headerCheckboxRef}
           checked={isAllUsersSelected}
           onChange={isSelectedAllUsersChange}
           type="checkbox"
@@ -39,6 +52,14 @@ export const tableColumns = [
   }),
   col.accessor("name", {
     header: "Name",
+    cell: ({ getValue, row }) => (
+      <Link
+        className="underline hover:no-underline"
+        href={ROUTE.HOME.humanresource.detail.path(row.original.id)}
+      >
+        {getValue()}
+      </Link>
+    ),
   }),
   col.accessor("email", { header: "Email" }),
   col.accessor("role", {
@@ -72,12 +93,20 @@ export const tableColumns = [
           },
         });
 
+      const { mutate: resetPassword, isPending: isReseting } =
+        api.user.update_password.useMutation({
+          onSuccess() {
+            toast.success(`Password has been reset`);
+            utils.user.list.invalidate();
+          },
+        });
+
       return (
         <div className="flex justify-end">
           {/* <AuthGuardClient viewableFor={""}> */}
           <Tooltip>
             <TooltipTrigger asChild>
-              <Link href={""}>
+              <Link href={ROUTE.HOME.humanresource.edit.path(userId)}>
                 <Button size="icon" variant="ghost">
                   <Pencil />
                 </Button>
@@ -89,7 +118,24 @@ export const tableColumns = [
           <Tooltip>
             <ConfirmPopover
               asChild
+              onConfirm={() =>
+                resetPassword({ id: userId, raw_password: "123456aA@" })
+              }
+            >
+              <TooltipTrigger asChild>
+                <Button disabled={isReseting} size="icon" variant="ghost">
+                  <RotateCcw />
+                </Button>
+              </TooltipTrigger>
+            </ConfirmPopover>
+            <TooltipContent>Reset Password</TooltipContent>
+          </Tooltip>
+
+          <Tooltip>
+            <ConfirmPopover
+              asChild
               onConfirm={() => doDelete({ ids: [userId] })}
+              variant="destructive"
             >
               <TooltipTrigger asChild>
                 <Button disabled={isDeleting} size="icon" variant="ghost">

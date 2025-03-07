@@ -14,7 +14,7 @@ export function HeaderBlock() {
         <SidebarMenuItem>
           <Link href="/" target="_blank">
             <SidebarMenuButton
-              className="cursor-pointer data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+              className="cursor-pointer font-semibold text-[18px] data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
               size="lg"
             >
               <div className="size-8 aspect-square">
@@ -25,7 +25,7 @@ export function HeaderBlock() {
                   width={64}
                 />
               </div>
-              GALAXY ACADEMY
+              Galaxy Academy
             </SidebarMenuButton>
           </Link>
         </SidebarMenuItem>

@@ -23,6 +23,8 @@ import { User } from "next-auth";
 import { useLocale } from "next-intl";
 import { setLocale } from "@/server/actions/i18n";
 import { Languages, LogOut, SunMoon, User as UserIcon } from "lucide-react";
+import Link from "next/link";
+import { ROUTE } from "@/lib/constants";
 
 interface AvatarDropdownProps extends ButtonProps {
   user: Pick<User, "name" | "email">;
@@ -73,11 +75,12 @@ export function AvatarDropdown({
         </DropdownMenuLabel>
 
         <DropdownMenuSeparator />
-
-        <DropdownMenuItem className="cursor-pointer">
-          <UserIcon />
-          Profile
-        </DropdownMenuItem>
+        <Link href="/profile">
+          <DropdownMenuItem className="cursor-pointer">
+            <UserIcon />
+            Profile
+          </DropdownMenuItem>
+        </Link>
 
         <DropdownMenuSub>
           <DropdownMenuSubTrigger>

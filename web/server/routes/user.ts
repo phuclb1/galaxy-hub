@@ -4,6 +4,7 @@ import { paginationSchema } from "@/lib/schemas/params";
 import { ApiList } from "@/lib/types";
 import { User } from "next-auth";
 import {
+  updatePasswordSchema,
   userCreateSchema,
   userSchema,
   userUpdateSchema,
@@ -11,13 +12,15 @@ import {
 import { z } from "zod";
 
 export const userRouter = router({
-  list: authedProcedure.input(paginationSchema).query(async ({ input }) => {
-    const { page_size: page_size, page: page, query } = input;
-    return ky.get<ApiList<User, "users">>({
-      url: "/users",
-      params: { page_size, page, query },
-    });
-  }),
+  list: authedProcedure
+    .input(paginationSchema.extend({ roles: z.array(z.string()).optional() }))
+    .query(async ({ input }) => {
+      const { page_size: page_size, page: page, query, roles } = input;
+      return ky.get<ApiList<User, "users">>({
+        url: "/users",
+        params: { page_size, page, query, roles },
+      });
+    }),
   detail: authedProcedure
     .input(userSchema.pick({ id: true }))
     .query(async ({ input }) => ky.get<User>(`/users/${input.id}`)),
@@ -32,9 +35,7 @@ export const userRouter = router({
   update: authedProcedure
     .input(userUpdateSchema)
     .mutation(async ({ input }) => ky.put<User>(`/users/${input.id}`, input)),
-  resetPassword: authedProcedure
-    .input(userSchema.pick({ id: true }))
-    .mutation(async ({ input }) =>
-      ky.post<{ message: string }>(`/reset-pass/${input.id}`)
-    ),
+  update_password: authedProcedure
+    .input(updatePasswordSchema)
+    .mutation(async ({ input }) => ky.put<User>(`/users/${input.id}`, input)),
 });

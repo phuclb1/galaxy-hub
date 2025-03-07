@@ -11,6 +11,25 @@ export const userRoleEnum = z.enum([
 ]);
 export type UserRole = z.TypeOf<typeof userRoleEnum>;
 
+// export const userRoles = [
+//   { label: "BLD", value: "BLD" },
+//   { label: "Director", value: "Director" },
+//   { label: "Coach", value: "Coach" },
+//   { label: "Manager", value: "Manager" },
+//   { label: "Athlete", value: "Athlete" },
+//   { label: "Student", value: "Student" },
+//   { label: "Parent", value: "Parent" },
+// ];
+
+export const userRoles = [
+  "BLD",
+  "Director",
+  "Coach",
+  "Manager",
+  "Athlete",
+  "Student",
+  "Parent",
+];
 const baseUserSchema = z.object({
   name: z.string().min(1, { message: "Name must be required" }),
   email: z.string().email(),
@@ -44,7 +63,18 @@ export const userUpdateSchema = userSchema
     role: true,
   })
   .extend({
-    password: z.string(),
+    raw_password: z.string(),
   })
   .partial();
 export type UserUpdate = z.TypeOf<typeof userUpdateSchema>;
+
+export const updatePasswordSchema = userSchema
+  .pick({
+    id: true,
+  })
+  .extend({
+    raw_password: z.string(),
+  })
+  .partial();
+
+export type UpdatePassword = z.TypeOf<typeof updatePasswordSchema>;

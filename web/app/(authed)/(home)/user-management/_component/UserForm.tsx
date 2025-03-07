@@ -51,7 +51,7 @@ export function UserForm({
         />
         <FormField
           control={form.control}
-          disabled={disabled}
+          disabled={mode === "EDIT"}
           name="email"
           render={({ field }) => (
             <FormItem>
@@ -63,20 +63,22 @@ export function UserForm({
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          disabled={disabled}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Password</FormLabel>
-              <FormControl>
-                <Input type="password" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        {mode === "CREATE" && (
+          <FormField
+            control={form.control}
+            disabled={disabled}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <Input type="password" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
         <FormField
           control={form.control}
           disabled={disabled}

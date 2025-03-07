@@ -37,7 +37,7 @@ class UserInfo(UserBase):
 
 
 class ListUserRequest(PagingRequest):
-    status: Optional[List[UserRole]] = Field(
+    roles: Optional[List[UserRole]] = Field(
         Query(None, description=USER_ROLE))
 
 

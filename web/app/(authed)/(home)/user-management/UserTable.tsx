@@ -7,22 +7,26 @@ import {
 } from "@/components/shared/table/TableFilter";
 import { useAtomValue } from "jotai";
 import { api } from "@/protocol/trpc/client";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useTable } from "@/components/shared/table/useTable";
 import { tableColumns } from "@/components/shared/table/UserTableColumns";
 import { DataTablePagination } from "@/components/shared/table/DataTablePagination";
 import { DataTable } from "@/components/shared/table/DataTable";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { PlusCircle } from "lucide-react";
+import { PlusCircle, Settings2 } from "lucide-react";
 import { ROUTE } from "@/lib/constants";
+import SelectRole from "@/components/shared/table/SelectRole";
+import { MultiDeleteUsers } from "./_component/MultipleDeleteUser";
 
 export function UserTable() {
   const [pagination, setPagination] = usePagination();
   const query = useAtomValue(TableSearchAtom);
+  const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
   const { data: queryData } = api.user.list.useQuery({
     ...pagination,
     query,
+    roles: selectedRoles,
   });
   const data = useMemo(() => queryData?.users ?? [], [queryData]);
 
@@ -32,10 +36,23 @@ export function UserTable() {
     pagination: { pagination, setPagination },
     total: queryData?.total,
   });
+
+  const handleRoleChange = (newRoles: string[]) => {
+    setSelectedRoles(newRoles);
+  };
+
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center justify-between gap-2">
-        <TableFilter className="w-100" />
+        <div className="flex items-center gap-2">
+          <TableFilter className="w-100" />
+
+          <SelectRole
+            selectedRoles={selectedRoles}
+            onRoleChange={handleRoleChange}
+          />
+          <MultiDeleteUsers table={table} />
+        </div>
 
         <Link className="ml-auto" href={ROUTE.HOME.humanresource.create.path}>
           <Button>

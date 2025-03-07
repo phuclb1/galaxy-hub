@@ -11,6 +11,8 @@ from internal.gateway.auth_gw import AuthGateway
 from internal.middleware.auth import AuthMiddleware
 from tools.uts_exception import exception_handler
 
+auth_middleware = AuthMiddleware()
+
 
 class AuthHandler:
     controller: AuthController
@@ -58,7 +60,7 @@ class AuthHandler:
     async def logout(
         self,
         user_info: UserInfo = Depends(
-            AuthMiddleware.get_current_user)
+            auth_middleware.get_current_user)
     ):
         if user_info is None:
             logger.info("User is not login")
@@ -69,7 +71,7 @@ class AuthHandler:
     async def get_me(
         self,
         user_info: UserInfo = Depends(
-            AuthMiddleware.get_current_user)
+            auth_middleware.get_current_user)
     ):
         if user_info is None:
             raise ExceptionUnauthorized

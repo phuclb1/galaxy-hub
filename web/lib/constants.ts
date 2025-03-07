@@ -1,33 +1,25 @@
+type Id = string | number;
+
+export type Route = {
+  path: string | ((id: Id) => string);
+  title: string;
+};
+
 export const ROUTE = {
   HOME: {
-    root: { path: "/home", title: "Home" },
+    root: { path: "/", title: "Home" },
     humanresource: {
-      root: { path: "/human-resource", title: "Human Resource" },
-      create: { path: "/human-resource/create", title: "Create User" },
-    },
-    coachmanagement: {
-      root: {
-        path: "/human-resource/coach-management",
-        title: "Coach Management",
+      root: { path: "/user-management", title: "User Management" },
+      create: { path: "/user-management/create", title: "Create User" },
+      detail: {
+        path: (id: Id) => `/user-management/${id}`,
+        title: "User Detail",
+      },
+      edit: {
+        path: (id: Id) => `/user-management/${id}/edit`,
+        title: "Edit User",
       },
     },
-    managermanagement: {
-      root: {
-        path: "/human-resource/manager-management",
-        title: "Manager Management",
-      },
-    },
-    studentmanagement: {
-      root: {
-        path: "/human-resource/student-management",
-        title: "Student Management",
-      },
-    },
-    teammanagement: {
-      root: {
-        path: "/human-resource/team-management",
-        title: "Team Management",
-      },
-    },
+    profile: { path: "/profile", title: "My Profile" },
   },
 };

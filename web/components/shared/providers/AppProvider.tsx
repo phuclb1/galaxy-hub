@@ -27,7 +27,7 @@ export function AppProvider({
       <SessionProvider>
         <NuqsAdapter>
           <TRPCProvider>
-            <ThemeProvider attribute="class">
+            <ThemeProvider attribute="class" defaultTheme="light">
               <TooltipProvider delayDuration={200}>
                 {children}
                 <DevTools isInitialOpen={false} />
