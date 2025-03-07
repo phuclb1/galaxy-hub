@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/tooltip";
 import { ROUTE } from "@/lib/constants";
 import { api } from "@/protocol/trpc/client";
-import { createColumnHelper } from "@tanstack/react-table";
+import { createColumnHelper, Table } from "@tanstack/react-table";
 import { Pencil, RotateCcw, Trash2 } from "lucide-react";
 import { User } from "next-auth";
 import Link from "next/link";
@@ -17,31 +17,33 @@ import { toast } from "sonner";
 
 const col = createColumnHelper<User>();
 
+const HeaderCheckbox = ({ table }: { table: Table<User> }) => {
+  const isAllUsersSelected = table.getIsAllRowsSelected();
+  const isSelectedAllUsersChange = table.getToggleAllRowsSelectedHandler();
+  const isSomeUsersSelected = table.getIsSomeRowsSelected();
+
+  const headerCheckboxRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (headerCheckboxRef.current) {
+      headerCheckboxRef.current.indeterminate = isSomeUsersSelected;
+    }
+  }, [isSomeUsersSelected]);
+
+  return (
+    <input
+      ref={headerCheckboxRef}
+      checked={isAllUsersSelected}
+      onChange={isSelectedAllUsersChange}
+      type="checkbox"
+    />
+  );
+};
+
 export const tableColumns = [
   col.display({
     id: "select",
-    header: ({ table }) => {
-      const isAllUsersSelected = table.getIsAllRowsSelected();
-      const isSelectedAllUsersChange = table.getToggleAllRowsSelectedHandler();
-      const isSomeUsersSelected = table.getIsSomeRowsSelected();
-
-      const headerCheckboxRef = useRef<HTMLInputElement>(null);
-
-      useEffect(() => {
-        if (headerCheckboxRef.current) {
-          headerCheckboxRef.current.indeterminate = isSomeUsersSelected;
-        }
-      }, [isSomeUsersSelected]);
-
-      return (
-        <input
-          ref={headerCheckboxRef}
-          checked={isAllUsersSelected}
-          onChange={isSelectedAllUsersChange}
-          type="checkbox"
-        />
-      );
-    },
+    header: ({ table }) => <HeaderCheckbox table={table} />,
     cell: ({ row }) => (
       <input
         checked={row.getIsSelected()}

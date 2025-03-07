@@ -24,7 +24,6 @@ import { useLocale } from "next-intl";
 import { setLocale } from "@/server/actions/i18n";
 import { Languages, LogOut, SunMoon, User as UserIcon } from "lucide-react";
 import Link from "next/link";
-import { ROUTE } from "@/lib/constants";
 
 interface AvatarDropdownProps extends ButtonProps {
   user: Pick<User, "name" | "email">;

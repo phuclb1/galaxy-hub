@@ -14,7 +14,7 @@ import { DataTablePagination } from "@/components/shared/table/DataTablePaginati
 import { DataTable } from "@/components/shared/table/DataTable";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { PlusCircle, Settings2 } from "lucide-react";
+import { PlusCircle } from "lucide-react";
 import { ROUTE } from "@/lib/constants";
 import SelectRole from "@/components/shared/table/SelectRole";
 import { MultiDeleteUsers } from "./_component/MultipleDeleteUser";

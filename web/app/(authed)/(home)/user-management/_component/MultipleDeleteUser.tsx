@@ -1,4 +1,3 @@
-import { AuthGuardClient } from "@/components/shared/AuthGuardClient";
 import { ConfirmPopover } from "@/components/shared/ConfirmPopover";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";

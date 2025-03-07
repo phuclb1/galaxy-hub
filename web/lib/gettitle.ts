@@ -1,11 +1,9 @@
-import { ROUTE } from "./constants";
+import { Route, ROUTE } from "./constants";
 type Id = string | number;
 
 const isPathFunction = (
   path: string | ((id: Id) => string)
-): path is (id: Id) => string => {
-  return typeof path === "function";
-};
+): path is (id: Id) => string => typeof path === "function";
 
 const matchDynamicRoute = (
   url: string,
@@ -21,16 +19,18 @@ const matchDynamicRoute = (
   return dynamicRouteRegex.test(url);
 };
 
-const getAllRoutes = (routeObj: any): any[] => {
-  let routes: any[] = [];
+const getAllRoutes = (routeObj: Record<string, unknown>, id?: Id): Route[] => {
+  let routes: Route[] = [];
 
-  for (let key in routeObj) {
+  for (const key in routeObj) {
     const route = routeObj[key];
 
-    if (typeof route === "object" && "path" in route) {
-      routes.push(route);
-    } else if (typeof route === "object") {
-      routes = routes.concat(getAllRoutes(route));
+    if (typeof route === "object" && route !== null && "path" in route) {
+      routes.push(route as Route);
+    } else if (typeof route === "object" && route !== null) {
+      routes = routes.concat(
+        getAllRoutes(route as Record<string, unknown>, id)
+      );
     }
   }
 
@@ -40,7 +40,7 @@ const getAllRoutes = (routeObj: any): any[] => {
 export const getTitleFromUrl = (url: string): string => {
   const routes = getAllRoutes(ROUTE);
 
-  for (let route of routes) {
+  for (const route of routes) {
     console.log("title", route.title);
     if (typeof route.path === "string" && route.path === url) {
       return route.title;
