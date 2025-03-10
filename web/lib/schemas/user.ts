@@ -33,6 +33,8 @@ export const userRoles = [
 const baseUserSchema = z.object({
   name: z.string().min(1, { message: "Name must be required" }),
   email: z.string().email(),
+  phone_number: z.string().optional(),
+  address: z.string().optional(),
   role: userRoleEnum,
   id: z.string(),
   hashed_token: z.string(),
@@ -48,6 +50,8 @@ export const userCreateSchema = userSchema
     name: true,
     email: true,
     role: true,
+    phone_number: true,
+    address: true,
   })
   .extend({
     password: z
@@ -61,6 +65,8 @@ export const userUpdateSchema = userSchema
     id: true,
     name: true,
     role: true,
+    phone_number: true,
+    address: true,
   })
   .extend({
     raw_password: z.string(),

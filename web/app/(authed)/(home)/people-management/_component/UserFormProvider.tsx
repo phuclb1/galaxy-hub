@@ -22,6 +22,8 @@ const UserFormContext = createContext<
 const defaultUser: UserCreate = {
   name: "",
   email: "",
+  phone_number: "",
+  address: "",
   role: "Student",
   password: "123456aA@",
 };

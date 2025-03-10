@@ -1,5 +1,7 @@
 "use client";
 
+import { ComponentPropsWithRef } from "react";
+import { useCenterForm } from "./CenterFormProvider";
 import {
   Form,
   FormControl,
@@ -8,8 +10,8 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
-import { useUserForm } from "./UserFormProvider";
 import {
   Select,
   SelectContent,
@@ -17,15 +19,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { userRoleEnum } from "@/lib/schemas/user";
-import { ComponentPropsWithRef } from "react";
-import { cn } from "@/lib/utils";
+import {
+  centerDepartmentEnum,
+  centerTypeEnum,
+} from "@/lib/schemas/training-center";
 
-export function UserForm({
+export function CenterForm({
   className,
   ...props
 }: Readonly<Omit<ComponentPropsWithRef<"form">, "onSubmit">>) {
-  const { form, mode, onSubmit } = useUserForm();
+  const { form, mode, onSubmit } = useCenterForm();
   const disabled = mode === "VIEW";
 
   return (
@@ -51,11 +54,11 @@ export function UserForm({
         />
         <FormField
           control={form.control}
-          disabled={mode === "EDIT"}
-          name="email"
+          disabled={disabled}
+          name="address"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>Address</FormLabel>
               <FormControl>
                 <Input {...field} />
               </FormControl>
@@ -63,29 +66,13 @@ export function UserForm({
             </FormItem>
           )}
         />
-        {mode === "CREATE" && (
-          <FormField
-            control={form.control}
-            disabled={disabled}
-            name="password"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Password</FormLabel>
-                <FormControl>
-                  <Input type="password" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        )}
         <FormField
           control={form.control}
           disabled={disabled}
-          name="role"
+          name="type"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Role</FormLabel>
+              <FormLabel>Type</FormLabel>
               <Select defaultValue={field.value} onValueChange={field.onChange}>
                 <FormControl>
                   <SelectTrigger>
@@ -93,9 +80,34 @@ export function UserForm({
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {userRoleEnum.options.map((role) => (
-                    <SelectItem key={role} value={role}>
-                      {role}
+                  {centerTypeEnum.options.map((type) => (
+                    <SelectItem key={type} value={type}>
+                      {type}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          disabled={disabled}
+          name="department"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Department</FormLabel>
+              <Select defaultValue={field.value} onValueChange={field.onChange}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {centerDepartmentEnum.options.map((depart) => (
+                    <SelectItem key={depart} value={depart}>
+                      {depart}
                     </SelectItem>
                   ))}
                 </SelectContent>

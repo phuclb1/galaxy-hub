@@ -31,6 +31,8 @@ class UserRepository:
             id=round(next(self.generator)),
             name=create_request.name,
             role=create_request.role,
+            phone_number=create_request.phone_number,
+            address=create_request.address,
             email=create_request.email,
             created_at=datetime.now(),
             updated_at=datetime.now()

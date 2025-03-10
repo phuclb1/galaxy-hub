@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from typing import Optional
 
 import bcrypt
 import jwt
@@ -34,6 +35,9 @@ class User(Base):
     name: Mapped[str] = mapped_column(String())
     email: Mapped[str] = mapped_column(String(), unique=True)
     role: Mapped[UserRole] = mapped_column(String())
+    phone_number: Mapped[Optional[str]] = mapped_column(
+        String(), nullable=True)
+    address: Mapped[Optional[str]] = mapped_column(String(), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(),
                                                  default=datetime.now(), nullable=False)
     updated_at: Mapped[datetime] = mapped_column(DateTime(),
@@ -57,6 +61,8 @@ class User(Base):
             name=self.name,
             email=self.email,
             role=self.role,
+            phone_number=self.phone_number,
+            address=self.address,
             created_at=int(self.created_at.timestamp() * 1000),
             updated_at=int(self.updated_at.timestamp() * 1000),
         )
@@ -86,6 +92,8 @@ class UserFilterSet(FilterSet):
         name=OrderingField(User.name),
         email=OrderingField(User.email),
         role=OrderingField(User.role),
+        phone_number=OrderingField(User.phone_number),
+        address=OrderingField(User.address),
         created_at=OrderingField(User.created_at),
         updated_at=OrderingField(User.updated_at),
     )

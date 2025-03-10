@@ -40,7 +40,7 @@ const HeaderCheckbox = ({ table }: { table: Table<User> }) => {
   );
 };
 
-export const tableColumns = [
+export const userTableColumns = [
   col.display({
     id: "select",
     header: ({ table }) => <HeaderCheckbox table={table} />,
@@ -68,6 +68,8 @@ export const tableColumns = [
     header: "Role",
     cell: ({ getValue }) => <Badge variant="secondary">{getValue()}</Badge>,
   }),
+  col.accessor("phone_number", { header: "Phone Number" }),
+  col.accessor("address", { header: "Address" }),
   col.accessor("created_at", {
     header: "Created at",
     cell: ({ getValue }) => {
@@ -87,6 +89,8 @@ export const tableColumns = [
     cell: function Action({ row }) {
       const userId = row.original.id;
       const utils = api.useUtils();
+      const { data } = api.auth.me.useQuery();
+      const isCurrentUser = data && data.id === userId;
       const { mutate: doDelete, isPending: isDeleting } =
         api.user.delete.useMutation({
           onSuccess() {
@@ -140,7 +144,11 @@ export const tableColumns = [
               variant="destructive"
             >
               <TooltipTrigger asChild>
-                <Button disabled={isDeleting} size="icon" variant="ghost">
+                <Button
+                  disabled={isDeleting || isCurrentUser}
+                  size="icon"
+                  variant="ghost"
+                >
                   <Trash2 className="text-destructive" />
                 </Button>
               </TooltipTrigger>

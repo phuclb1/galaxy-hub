@@ -37,13 +37,14 @@ export function InfoCard({
             <div>Name: {user.name}</div>
             <div>Email: {user.email}</div>
             <div>Role: {user.role}</div>
+            <div>Phone Number: {user.phone_number}</div>
+            <div>Address: {user.address}</div>
           </div>
         </div>
       </CardContent>
 
       <CardFooter className="flex gap-4">
         <Button variant="destructive">Delete Account</Button>
-        {/* <Button variant="destructive">Reset Password</Button> */}
       </CardFooter>
     </Card>
   );

@@ -1,5 +1,5 @@
 import { api } from "@/protocol/trpc/server";
-import { InfoCard } from "../user-management/_component/InfoCard";
+import { InfoCard } from "../people-management/_component/InfoCard";
 import { BackButton } from "@/components/shared/BackButton";
 import { ROUTE } from "@/lib/constants";
 

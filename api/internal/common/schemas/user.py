@@ -17,6 +17,8 @@ class UserBase(BaseModel):
     email: str = Field("", description="User email")
     role: Optional[UserRole] = Field(None,
                                      description=USER_ROLE)
+    phone_number: Optional[str] = Field(None, description="Phone number")
+    address: Optional[str] = Field(None, description="Address")
 
 
 class CreateUserRequest(UserBase):
@@ -27,6 +29,8 @@ class UpdateUserRequest(BaseModel):
     name: Optional[str] = Field(None, description=USER_NAME)
     role: Optional[UserRole] = Field(None, description=USER_ROLE)
     raw_password: Optional[str] = Field(None, description=USER_PASSWORD)
+    phone_number: Optional[str] = Field(None, description="Phone number")
+    address: Optional[str] = Field(None, description="Address")
 
 
 class UserInfo(UserBase):

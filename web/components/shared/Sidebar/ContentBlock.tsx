@@ -18,7 +18,14 @@ import {
 } from "@/components/ui/sidebar";
 import { ROUTE } from "@/lib/constants";
 import { UserRole } from "@/lib/schemas/user";
-import { BookOpenText, Home, LucideIcon, Minus, Plus } from "lucide-react";
+import {
+  BookOpenText,
+  Home,
+  House,
+  LucideIcon,
+  Minus,
+  Plus,
+} from "lucide-react";
 import Link from "next/link";
 import { ComponentPropsWithRef, useState } from "react";
 import { AuthGuardClient } from "../AuthGuardClient";
@@ -41,6 +48,16 @@ const navMain: NavItem[] = [
       },
     ],
   },
+  {
+    title: ROUTE.HOME.trainingcenter.root.title,
+    icon: House,
+    items: [
+      {
+        title: ROUTE.HOME.trainingcenter.root.title,
+        url: ROUTE.HOME.trainingcenter.root.path,
+      },
+    ],
+  },
 ];
 
 export function ContentBlock() {
@@ -53,7 +70,7 @@ export function ContentBlock() {
     <SidebarContent>
       <SidebarGroup>
         <SidebarGroupContent>
-          <SidebarMenu>
+          <SidebarMenu className="gap-2">
             <SidebarMenuItem key={"Home"}>
               <SidebarMenuButton asChild>
                 <Link href={ROUTE.HOME.root.path}>

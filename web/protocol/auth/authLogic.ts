@@ -23,16 +23,16 @@ export const authLogic: NextAuthOptions = {
       name: "Credentials",
       credentials: { email: {}, password: {} },
       async authorize(credentials, _req) {
-        if (env.DEBUG_SKIP_AUTH)
-          return {
-            name: "demo_account",
-            email: "demo@notarealemail.com",
-            id: "",
-            ms_id: "",
-            access_token: "123",
-            picture: "",
-            role: "",
-          } satisfies User;
+        // if (env.DEBUG_SKIP_AUTH)
+        //   return {
+        //     name: "demo_account",
+        //     email: "demo@notarealemail.com",
+        //     id: "",
+        //     ms_id: "",
+        //     access_token: "123",
+        //     picture: "",
+        //     role: "",
+        //   } satisfies User;
 
         const res = await ky.post(
           `${env.BACKEND_API_URL}/api/v1/auth/login/password`,

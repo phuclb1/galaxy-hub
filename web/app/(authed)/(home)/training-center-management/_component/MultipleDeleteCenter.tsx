@@ -15,7 +15,7 @@ interface MultiDeleteRowsInTableProps<TData>
   table: Table<TData>;
 }
 
-export function MultiDeleteUsers<TData extends HasId>({
+export function MultiDeleteCenters<TData extends HasId>({
   table,
   className,
   ...props
@@ -24,13 +24,13 @@ export function MultiDeleteUsers<TData extends HasId>({
   const utils = api.useUtils();
 
   const { mutate: doDelete, isPending: isUserDeleting } =
-    api.user.delete.useMutation({
+    api.center.delete.useMutation({
       onSuccess() {
-        toast.success(`Deleted ${filteredRows.length} user(s)`);
-        utils.user.list.invalidate();
+        toast.success(`Deleted ${filteredRows.length} center(s)`);
+        utils.center.list.invalidate();
       },
     });
-  function onDeleteUsers() {
+  function onDeleteCenters() {
     doDelete({
       ids: table
         .getSelectedRowModel()
@@ -43,7 +43,7 @@ export function MultiDeleteUsers<TData extends HasId>({
   return (
     <ConfirmPopover
       asChild
-      onConfirm={onDeleteUsers}
+      onConfirm={onDeleteCenters}
       variant="destructive"
       {...props}
     >
