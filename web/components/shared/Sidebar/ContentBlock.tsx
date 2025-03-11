@@ -9,7 +9,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { ROUTE } from "@/lib/constants";
-import { BookOpenText, Building2, Home, House, LucideIcon } from "lucide-react";
+import { BookOpenText, Building2, Home, LucideIcon } from "lucide-react";
 import Link from "next/link";
 
 type NavItem = {
