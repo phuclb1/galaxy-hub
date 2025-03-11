@@ -23,12 +23,24 @@ import {
   centerDepartmentEnum,
   centerTypeEnum,
 } from "@/lib/schemas/training-center";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Command,
+  CommandEmpty,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 
 export function CenterForm({
   className,
   ...props
 }: Readonly<Omit<ComponentPropsWithRef<"form">, "onSubmit">>) {
-  const { form, mode, onSubmit } = useCenterForm();
+  const { form, mode, onSubmit, users } = useCenterForm();
   const disabled = mode === "VIEW";
 
   return (
@@ -112,6 +124,49 @@ export function CenterForm({
                   ))}
                 </SelectContent>
               </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          disabled={disabled}
+          name="manager_id"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Manager</FormLabel>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Input
+                      type="text"
+                      value={
+                        field.value
+                          ? users?.find((user) => user.id === field.value)?.name
+                          : ""
+                      }
+                      readOnly
+                      placeholder="Select Manager"
+                    />
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent align="start">
+                  <Command>
+                    <CommandInput placeholder="Search..." />
+                    <CommandList>
+                      <CommandEmpty>No results found.</CommandEmpty>
+                      {users?.map((user) => (
+                        <CommandItem
+                          key={user.id}
+                          onSelect={() => field.onChange(user.id)}
+                        >
+                          {user.name}
+                        </CommandItem>
+                      ))}
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
               <FormMessage />
             </FormItem>
           )}

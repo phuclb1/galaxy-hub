@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS users (
 
 CREATE TABLE IF NOT EXISTS training_centers (
     id              BIGINT      PRIMARY KEY,
+    manager_id      BIGINT,
     name            TEXT        NOT NULL,
     address         TEXT        NOT NULL,
     type            TEXT,
@@ -21,5 +22,9 @@ CREATE TABLE IF NOT EXISTS training_centers (
     created_at      TIMESTAMP   DEFAULT CURRENT_TIMESTAMP,
     updated_at      TIMESTAMP   DEFAULT CURRENT_TIMESTAMP
 );
+
+ALTER TABLE training_centers
+    ADD CONSTRAINT fk_manager FOREIGN KEY (manager_id) REFERENCES users (id)
+    ON DELETE SET NULL;
 
 COMMIT;

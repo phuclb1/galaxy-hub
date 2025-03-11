@@ -29,6 +29,7 @@ class TrainingCenterRepository:
     ) -> TrainingCenter:
         center = TrainingCenter(
             id=round(next(self.generator)),
+            manager_id=create_request.manager_id,
             name=create_request.name,
             address=create_request.address,
             type=create_request.type,

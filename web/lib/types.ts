@@ -1,3 +1,4 @@
+import { User } from "next-auth";
 import { BaseSyntheticEvent, ReactNode } from "react";
 import { FieldValues, UseFormReturn } from "react-hook-form";
 
@@ -5,6 +6,7 @@ export interface FormProviderProps<T> {
   children: ReactNode;
   defaultValues?: T;
   mode: "CREATE" | "VIEW" | "EDIT";
+  users?: User[];
 }
 
 export interface FormContextReturn<T extends FieldValues> {
@@ -13,6 +15,7 @@ export interface FormContextReturn<T extends FieldValues> {
   form: UseFormReturn<T>;
   onSubmit: (e?: BaseSyntheticEvent) => Promise<void>;
   isPending?: boolean;
+  users?: User[];
 }
 
 /**

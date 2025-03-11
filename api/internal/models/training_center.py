@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import Optional
-from sqlalchemy import String, BigInteger, DateTime
+from sqlalchemy import String, BigInteger, DateTime, ForeignKey
 from sqlalchemy.orm import (
     Mapped,
     mapped_column,
@@ -16,6 +16,8 @@ from internal.common.types import ID
 class TrainingCenter(Base):
     __tablename__ = "training_centers"
     id: Mapped[ID] = mapped_column(BigInteger(), primary_key=True)
+    manager_id: Mapped[Optional[ID]] = mapped_column(
+        BigInteger, ForeignKey("users.id"), nullable=True)
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     address: Mapped[str] = mapped_column(String(255), nullable=False)
     type: Mapped[Optional[CenterType]] = mapped_column(String, nullable=True)
@@ -29,6 +31,7 @@ class TrainingCenter(Base):
     def view(self) -> CenterResponse:
         return CenterResponse(
             id=self.id,
+            manager_id=self.manager_id,
             name=self.name,
             address=self.address,
             type=self.type,

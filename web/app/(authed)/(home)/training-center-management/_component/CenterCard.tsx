@@ -5,34 +5,57 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { TrainingCenter } from "@/lib/schemas/training-center";
+import { User } from "next-auth";
 
 export function CenterCard({
   center,
+  manager,
   className,
   ...props
 }: {
   center: TrainingCenter;
+  manager: User;
 } & ComponentPropsWithRef<"div">) {
   return (
-    <Card className={cn("", className)} {...props}>
-      <CardHeader>
-        <CardTitle className="flex items-center justify-between">
-          Training Center Information
-          <Link href={ROUTE.HOME.trainingcenter.edit.path(center.id)}>
-            <Button>Edit</Button>
-          </Link>
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="flex gap-2">
-          <div className="flex flex-col gap-2">
-            <div>Name: {center.name}</div>
-            <div>Address: {center.address}</div>
-            <div>Type: {center.type}</div>
-            <div>Department: {center.department}</div>
+    <div className="flex flex-col gap-2">
+      <Card className={cn("", className)} {...props}>
+        <CardHeader>
+          <CardTitle className="flex items-center justify-between">
+            Training Center Information
+            <Link href={ROUTE.HOME.trainingcenter.edit.path(center.id)}>
+              <Button>Edit</Button>
+            </Link>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex gap-2">
+            <div className="flex flex-col gap-2">
+              <div>Name: {center.name}</div>
+              <div>Address: {center.address}</div>
+              <div>Type: {center.type}</div>
+              <div>Department: {center.department}</div>
+            </div>
           </div>
-        </div>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+      <Card className={cn("", className)} {...props}>
+        <CardHeader>
+          <CardTitle className="flex items-center justify-between">
+            Manager Information
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex gap-2">
+            <div className="flex flex-col gap-2">
+              <div>Name: {manager.name}</div>
+              <div>Email: {manager.email}</div>
+              <div>Role: {manager.role}</div>
+              <div>Phone Number: {manager.phone_number ?? "null"}</div>
+              <div>Address: {manager.address ?? "null"}</div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   );
 }

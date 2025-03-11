@@ -8,6 +8,7 @@ from internal.common.types import ID
 
 
 class CenterInfo(BaseModel):
+    manager_id: Optional[ID] = Field(None, description="Manger")
     name: str = Field("", description="Training center name")
     address: str = Field("", description="Training center address")
     type: Optional[CenterType] = Field(

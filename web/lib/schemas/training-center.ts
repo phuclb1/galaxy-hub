@@ -8,6 +8,7 @@ export type CenterDepartment = z.TypeOf<typeof centerDepartmentEnum>;
 
 export const trainingCenterSchema = z.object({
   id: z.string(),
+  manager_id: z.string(),
   name: z.string().min(1, { message: "Name must be required" }),
   address: z.string().min(1, { message: "Address must be required " }),
   type: z.string(),
@@ -19,6 +20,7 @@ export const trainingCenterSchema = z.object({
 export type TrainingCenter = z.TypeOf<typeof trainingCenterSchema>;
 
 export const centerCreateSchema = trainingCenterSchema.pick({
+  manager_id: true,
   name: true,
   address: true,
   type: true,
@@ -29,6 +31,7 @@ export type CenterCreate = z.TypeOf<typeof centerCreateSchema>;
 
 export const centerUpdateSchema = trainingCenterSchema.pick({
   id: true,
+  manager_id: true,
   name: true,
   address: true,
   type: true,
