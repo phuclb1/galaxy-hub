@@ -8,8 +8,8 @@ export type CenterDepartment = z.TypeOf<typeof centerDepartmentEnum>;
 
 export const trainingCenterSchema = z.object({
   id: z.string(),
-  name: z.string(),
-  address: z.string(),
+  name: z.string().min(1, { message: "Name must be required" }),
+  address: z.string().min(1, { message: "Address must be required " }),
   type: z.string(),
   department: z.string(),
   created_at: z.number(),
