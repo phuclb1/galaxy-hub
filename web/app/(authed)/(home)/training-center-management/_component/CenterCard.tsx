@@ -9,12 +9,10 @@ import { User } from "next-auth";
 
 export function CenterCard({
   center,
-  manager,
   className,
   ...props
 }: {
   center: TrainingCenter;
-  manager: User;
 } & ComponentPropsWithRef<"div">) {
   return (
     <div className="flex flex-col gap-2">
@@ -47,11 +45,11 @@ export function CenterCard({
         <CardContent>
           <div className="flex gap-2">
             <div className="flex flex-col gap-2">
-              <div>Name: {manager.name}</div>
-              <div>Email: {manager.email}</div>
-              <div>Role: {manager.role}</div>
-              <div>Phone Number: {manager.phone_number ?? "null"}</div>
-              <div>Address: {manager.address ?? "null"}</div>
+              <div>Name: {center.manager.name}</div>
+              <div>Email: {center.manager.email}</div>
+              <div>Role: {center.manager.role}</div>
+              <div>Phone Number: {center.manager.phone_number ?? "null"}</div>
+              <div>Address: {center.manager.address ?? "null"}</div>
             </div>
           </div>
         </CardContent>

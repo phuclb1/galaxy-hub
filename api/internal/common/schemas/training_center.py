@@ -4,6 +4,7 @@ from pydantic import BaseModel, Field
 
 from internal.common.enums.training_center import CenterDepartment, CenterType
 from internal.common.schemas.common import ListResponse, PagingRequest
+from internal.common.schemas.user import UserInfo
 from internal.common.types import ID
 
 
@@ -27,6 +28,7 @@ class UpdateCenterRequest(CenterInfo):
 
 class CenterResponse(CenterInfo):
     id: ID = Field(..., description="ID")
+    manager: Optional[UserInfo] = Field(None, description="Manager info")
     created_at: int = Field(..., description="Center created at")
     updated_at: int = Field(..., description="Center updated at")
 

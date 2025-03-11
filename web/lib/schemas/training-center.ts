@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { userSchema } from "./user";
 
 export const centerTypeEnum = z.enum(["Football", "Basketball"]);
 export type CenterType = z.TypeOf<typeof centerTypeEnum>;
@@ -13,6 +14,7 @@ export const trainingCenterSchema = z.object({
   address: z.string().min(1, { message: "Address must be required " }),
   type: z.string(),
   department: z.string(),
+  manager: userSchema,
   created_at: z.number(),
   updated_at: z.number(),
 });

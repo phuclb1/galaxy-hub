@@ -65,11 +65,12 @@ export const centerTableColumns = [
   col.accessor("address", { header: "Address" }),
   col.accessor("type", { header: "Type" }),
   col.accessor("department", { header: "Department" }),
-  col.accessor("manager_id", {
+  col.accessor("manager", {
     header: "Manager",
     cell: ({ getValue }) => {
-      const { data } = api.user.detail.useQuery({ id: getValue() });
-      return data?.name;
+      const val = getValue();
+      console.log("aaa", val);
+      return val?.name || "null";
     },
   }),
   col.accessor("created_at", {

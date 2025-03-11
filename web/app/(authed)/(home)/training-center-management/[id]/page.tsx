@@ -8,8 +8,6 @@ export default async function Page({
 }: Readonly<{ params: Promise<Record<"id", string>> }>) {
   const id = (await params).id;
   const data = await api.center.detail({ id });
-  const manager_id = data.manager_id;
-  const user = await api.user.detail({ id: manager_id });
 
   return (
     <div className="flex flex-col gap-4">
@@ -17,7 +15,7 @@ export default async function Page({
         <BackButton href={ROUTE.HOME.trainingcenter.root.path} />
       </div>
 
-      <CenterCard center={data} manager={user} />
+      <CenterCard center={data} />
     </div>
   );
 }

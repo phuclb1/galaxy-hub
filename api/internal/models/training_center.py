@@ -4,6 +4,7 @@ from sqlalchemy import String, BigInteger, DateTime, ForeignKey
 from sqlalchemy.orm import (
     Mapped,
     mapped_column,
+    relationship,
 )
 from sqlalchemy_filterset import FilterSet, InFilter, OrderingField, OrderingFilter, SearchFilter
 
@@ -11,6 +12,7 @@ from core.database.postgres import Base
 from internal.common.enums.training_center import CenterDepartment, CenterType
 from internal.common.schemas.training_center import CenterResponse
 from internal.common.types import ID
+from internal.models.user import User
 
 
 class TrainingCenter(Base):
@@ -23,6 +25,9 @@ class TrainingCenter(Base):
     type: Mapped[Optional[CenterType]] = mapped_column(String, nullable=True)
     department: Mapped[Optional[CenterDepartment]
                        ] = mapped_column(String, nullable=True)
+    manager: Mapped[Optional["User"]] = relationship(
+        "User", backref="training_center", lazy="selectin"
+    )
     created_at: Mapped[datetime] = mapped_column(
         DateTime(), default=datetime.now(), nullable=False)
     updated_at: Mapped[datetime] = mapped_column(
@@ -36,6 +41,7 @@ class TrainingCenter(Base):
             address=self.address,
             type=self.type,
             department=self.department,
+            manager=self.manager.view(),
             created_at=int(self.created_at.timestamp() * 1000),
             updated_at=int(self.updated_at.timestamp() * 1000),
         )
