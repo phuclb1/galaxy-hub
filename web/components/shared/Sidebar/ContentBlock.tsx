@@ -9,7 +9,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { ROUTE } from "@/lib/constants";
-import { BookOpenText, Home, House, LucideIcon } from "lucide-react";
+import { BookOpenText, Building2, Home, House, LucideIcon } from "lucide-react";
 import Link from "next/link";
 
 type NavItem = {
@@ -27,7 +27,7 @@ const navMain: NavItem[] = [
   },
   {
     title: ROUTE.HOME.trainingcenter.root.title,
-    icon: House,
+    icon: Building2,
     url: ROUTE.HOME.trainingcenter.root.path,
   },
 ];
