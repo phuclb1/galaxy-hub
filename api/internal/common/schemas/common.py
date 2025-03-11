@@ -14,7 +14,13 @@ class PagingRequest(BaseModel):
     page: int = Field(..., description="Page number")
     page_size: int = Field(..., description="Page size")
     query: Optional[str] = Field(None, description="Query string")
-    ordering: Optional[str] = Field(None, description="Ordering string")
+    ordering: Optional[list[str]] = Field(
+        Query(
+            ["-created_at"],
+            description="Ordering, default is ordering by descending created_at",
+            example=["created_at", "-updated_at"],
+        ),
+    )
 
     @computed_field
     def skip(self) -> int:
