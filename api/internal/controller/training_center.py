@@ -1,5 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from internal.common.exceptions.training_center import ExceptionManagerNotFound
 from internal.common.schemas.training_center import (
     CenterResponse,
     CreateCenterRequest,
@@ -8,6 +9,7 @@ from internal.common.schemas.training_center import (
     UpdateCenterRequest
 )
 from internal.common.types import ID
+from internal.controller.user import UserController
 from internal.repository.registry import Registry
 
 
@@ -19,6 +21,10 @@ class TrainingCenterController:
 
     async def create_center(self, create_req: CreateCenterRequest) -> CenterResponse:
         async def _create_center(session: AsyncSession):
+            user = await self.repo.user_repo().get_user_by_id(create_req.manager_id)
+            if user is None:
+                raise ExceptionManagerNotFound(
+                    manager_id=create_req.manager_id)
             center = await self.repo.center_repo().create_center(session, create_req)
             return center.view()
         return await self.repo.do_tx(_create_center)
@@ -31,6 +37,10 @@ class TrainingCenterController:
 
     async def update_center(self, center_id: ID, update_req: UpdateCenterRequest) -> CenterResponse:
         async def _update_center(session: AsyncSession):
+            user = await self.repo.user_repo().get_user_by_id(update_req.manager_id)
+            if user is None:
+                raise ExceptionManagerNotFound(
+                    manager_id=update_req.manager_id)
             center = await self.repo.center_repo().update_center(session, center_id, update_req)
             return center.view()
         return await self.repo.do_tx(_update_center)

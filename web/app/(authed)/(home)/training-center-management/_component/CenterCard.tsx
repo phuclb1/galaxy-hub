@@ -5,7 +5,6 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { TrainingCenter } from "@/lib/schemas/training-center";
-import { User } from "next-auth";
 
 export function CenterCard({
   center,

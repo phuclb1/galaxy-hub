@@ -17,3 +17,9 @@ class ExceptionCenterAlreadyExists(XBaseException):
     def __init__(self, name: str):
         super().__init__(status_code=400,
                          message=f"Traning center with name {name} already exists")
+
+
+class ExceptionManagerNotFound(XBaseException):
+    def __init__(self, manager_id: ID):
+        super().__init__(status_code=400,
+                         message=f"Traning center {manager_id} not found")

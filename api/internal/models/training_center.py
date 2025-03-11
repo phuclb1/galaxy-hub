@@ -41,7 +41,7 @@ class TrainingCenter(Base):
             address=self.address,
             type=self.type,
             department=self.department,
-            manager=self.manager.view(),
+            manager=self.manager.view() if self.manager is not None else None,
             created_at=int(self.created_at.timestamp() * 1000),
             updated_at=int(self.updated_at.timestamp() * 1000),
         )
