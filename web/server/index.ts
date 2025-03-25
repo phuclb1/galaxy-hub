@@ -3,6 +3,8 @@ import { userRouter } from "./routes/user";
 import { authRouter } from "./routes/auth";
 import { exampleRouter } from "./routes/example";
 import { centerRouter } from "./routes/center";
+import { teamRouter } from "./routes/teams";
+import { studentRouter } from "./routes/students";
 
 export const appRouter = router({
   auth: authRouter,
@@ -13,6 +15,8 @@ export const appRouter = router({
   test: exampleRouter,
   center: centerRouter,
   user: userRouter,
+  team: teamRouter,
+  student: studentRouter,
 });
 // Export type router type signature,
 // NOT the router itself.

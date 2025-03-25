@@ -10,15 +10,21 @@ from core.settings import settings
 from tools.uts_scheduler import scheduler
 from internal.common.schemas.user import CreateUserRequest, UserRole
 from internal.handler.auth import AuthHandler
+from internal.handler.student import StudentHandler
+from internal.handler.teams import TeamHandler
 from internal.handler.training_center import TrainingCenterHandler
 from internal.handler.user import UserHandler
 from internal.controller.auth import AuthController
+from internal.controller.student import StudentController
+from internal.controller.teams import TeamController
 from internal.controller.training_center import TrainingCenterController
 from internal.controller.user import UserController
 from internal.gateway.redis_cl import RedisClient
 from internal.middleware.auth import AuthMiddleware
 from internal.repository.registry import Registry
 from internal.routes.auth import AuthRoute
+from internal.routes.student import StudentRoute
+from internal.routes.teams import TeamRoute
 from internal.routes.training_center import TrainingCenterRoute
 from internal.routes.user import UserRoute
 
@@ -32,7 +38,9 @@ class App:
             redis_client = RedisClient()
             registry = Registry(pg_engine, redis_client)
 
+            student_controller = StudentController(registry)
             center_controller = TrainingCenterController(registry)
+            team_controller = TeamController(registry)
             user_controller = UserController(registry)
             auth_controller = AuthController(registry)
             try:
@@ -51,10 +59,14 @@ class App:
             auth_handler = AuthHandler(auth_controller)
             user_handler = UserHandler(user_controller)
             center_handler = TrainingCenterHandler(center_controller)
+            team_handler = TeamHandler(team_controller)
+            student_handler = StudentHandler(student_controller)
 
             auth_router = AuthRoute(auth_handler)
             user_router = UserRoute(user_handler)
             center_router = TrainingCenterRoute(center_handler)
+            team_router = TeamRoute(team_handler)
+            student_router = StudentRoute(student_handler)
 
             prefix = "/api/v1"
             self.application.include_router(
@@ -65,6 +77,12 @@ class App:
             )
             self.application.include_router(
                 center_router.router, prefix=prefix + "/training-center", tags=["Training Center"]
+            )
+            self.application.include_router(
+                team_router.router, prefix=prefix + "/teams", tags=["Teams"]
+            )
+            self.application.include_router(
+                student_router.router, prefix=prefix + "/students", tags=["Students"]
             )
 
             scheduler.start()

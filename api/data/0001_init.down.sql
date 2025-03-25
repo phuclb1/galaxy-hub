@@ -2,4 +2,8 @@ BEGIN;
 DROP TABLE IF EXISTS users;
 
 DROP TABLE IF EXISTS training_centers;
+
+DROP TABLE IF EXISTS teams;
+
+DROP TABLE IF EXISTS students;
 COMMIT;

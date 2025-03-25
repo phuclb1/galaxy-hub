@@ -5,41 +5,41 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { ROUTE } from "@/lib/constants";
-import { TrainingCenter } from "@/lib/schemas/training-center";
+import { Team } from "@/lib/schemas/teams";
+import { api } from "@/protocol/trpc/client";
 import { createColumnHelper, Table } from "@tanstack/react-table";
 import { Pencil, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef } from "react";
-import { ConfirmPopover } from "../ConfirmPopover";
-import { api } from "@/protocol/trpc/client";
 import { toast } from "sonner";
+import { ConfirmPopover } from "../../ConfirmPopover";
 
-const col = createColumnHelper<TrainingCenter>();
+const col = createColumnHelper<Team>();
 
-const HeaderCheckbox = ({ table }: { table: Table<TrainingCenter> }) => {
-  const isAllCentersSelected = table.getIsAllRowsSelected();
-  const isSelectedAllCentersChange = table.getToggleAllRowsSelectedHandler();
-  const isSomeCentersSelected = table.getIsSomeRowsSelected();
+const HeaderCheckbox = ({ table }: { table: Table<Team> }) => {
+  const isAllTeamsSelected = table.getIsAllRowsSelected();
+  const isSelectedAllTeamsChange = table.getToggleAllRowsSelectedHandler();
+  const isSomeTeamsSelected = table.getIsSomeRowsSelected();
 
   const headerCheckboxRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (headerCheckboxRef.current) {
-      headerCheckboxRef.current.indeterminate = isSomeCentersSelected;
+      headerCheckboxRef.current.indeterminate = isSomeTeamsSelected;
     }
-  }, [isSomeCentersSelected]);
+  }, [isSomeTeamsSelected]);
 
   return (
     <input
       ref={headerCheckboxRef}
-      checked={isAllCentersSelected}
-      onChange={isSelectedAllCentersChange}
+      checked={isAllTeamsSelected}
+      onChange={isSelectedAllTeamsChange}
       type="checkbox"
     />
   );
 };
 
-export const centerTableColumns = [
+export const teamTableColumns = [
   col.display({
     id: "select",
     header: ({ table }) => <HeaderCheckbox table={table} />,
@@ -56,20 +56,23 @@ export const centerTableColumns = [
     cell: ({ getValue, row }) => (
       <Link
         className="underline hover:no-underline"
-        href={ROUTE.HOME.trainingcenter.detail.path(row.original.id)}
+        href={ROUTE.HOME.team.detail.path(row.original.id)}
       >
         {getValue()}
       </Link>
     ),
   }),
-  col.accessor("address", { header: "Address" }),
-  col.accessor("type", { header: "Type" }),
-  col.accessor("department", { header: "Department" }),
-  col.accessor("manager", {
-    header: "Manager",
+  col.accessor("coach", {
+    header: "Coach",
     cell: ({ getValue }) => {
       const val = getValue();
-      console.log("aaa", val);
+      return val?.name || "null";
+    },
+  }),
+  col.accessor("center", {
+    header: "Center",
+    cell: ({ getValue }) => {
+      const val = getValue();
       return val?.name || "null";
     },
   }),
@@ -93,9 +96,9 @@ export const centerTableColumns = [
       const centerId = row.original.id;
       const utils = api.useUtils();
       const { mutate: doDelete, isPending: isDeleting } =
-        api.center.delete.useMutation({
+        api.team.delete.useMutation({
           onSuccess() {
-            toast.success(`Center ${row.original.name} deleted`);
+            toast.success(`Team ${row.original.name} deleted`);
             utils.center.list.invalidate();
           },
         });

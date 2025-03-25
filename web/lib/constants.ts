@@ -39,5 +39,41 @@ export const ROUTE = {
         title: "Edit Center",
       },
     },
+    team: {
+      root: {
+        path: "/team-management",
+        title: "Team Management",
+      },
+      create: {
+        path: "/team-management/create",
+        title: "Create Team",
+      },
+      detail: {
+        path: (id: Id) => `/team-management/${id}`,
+        title: "Team Detail",
+      },
+      edit: {
+        path: (id: Id) => `/team-management/${id}/edit`,
+        title: "Edit Team",
+      },
+    },
+    student: {
+      root: {
+        path: "/student-management",
+        title: "Student-management",
+      },
+      create: {
+        path: "/student-management/create",
+        title: "Create Student",
+      },
+      detail: {
+        path: (id: Id) => `/student-management/${id}`,
+        title: "Student Detail",
+      },
+      edit: {
+        path: (id: Id) => `/student-management/${id}/edit`,
+        title: "Edit Student",
+      },
+    },
   },
 };

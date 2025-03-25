@@ -1,35 +1,35 @@
 "use client";
 
-import { usePagination } from "@/lib/params";
+import { studentTableColumns } from "@/components/shared/table/columns/StudentTableColumns";
 import {
   TableFilter,
   TableSearchAtom,
 } from "@/components/shared/table/TableFilter";
-import { useAtomValue } from "jotai";
-import { api } from "@/protocol/trpc/client";
-import { useMemo } from "react";
 import { useTable } from "@/components/shared/table/useTable";
-import { DataTablePagination } from "@/components/shared/table/DataTablePagination";
-import { DataTable } from "@/components/shared/table/DataTable";
+import { usePagination } from "@/lib/params";
+import { api } from "@/protocol/trpc/client";
+import { useAtomValue } from "jotai";
+import { useMemo } from "react";
+import { MultiDeleteStudents } from "./_component/MultipleDeleteStudent";
 import Link from "next/link";
+import { ROUTE } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
-import { ROUTE } from "@/lib/constants";
-import { MultiDeleteCenters } from "./_component/MultipleDeleteCenter";
-import { centerTableColumns } from "@/components/shared/table/columns/CenterTableColumns";
+import { DataTable } from "@/components/shared/table/DataTable";
+import { DataTablePagination } from "@/components/shared/table/DataTablePagination";
 
-export function CenterTable() {
+export function StudentTable() {
   const [pagination, setPagination] = usePagination();
   const query = useAtomValue(TableSearchAtom);
-  const { data: queryData } = api.center.list.useQuery({
+  const { data: queryData } = api.student.list.useQuery({
     ...pagination,
     query,
   });
-  const data = useMemo(() => queryData?.centers ?? [], [queryData]);
+  const data = useMemo(() => queryData?.students ?? [], [queryData]);
 
   const { table } = useTable({
     data,
-    columns: centerTableColumns,
+    columns: studentTableColumns,
     pagination: { pagination, setPagination },
     total: queryData?.total,
   });
@@ -40,10 +40,10 @@ export function CenterTable() {
         <div className="flex items-center gap-2">
           <TableFilter className="w-100" />
 
-          <MultiDeleteCenters table={table} />
+          <MultiDeleteStudents table={table} />
         </div>
 
-        <Link className="ml-auto" href={ROUTE.HOME.trainingcenter.create.path}>
+        <Link className="ml-auto" href={ROUTE.HOME.student.create.path}>
           <Button>
             <PlusCircle />
             New
