@@ -1,6 +1,5 @@
 "use client";
 
-import { TableSearchAtom } from "@/components/shared/table/TableFilter";
 import { ROUTE } from "@/lib/constants";
 import {
   CenterCreate,
@@ -11,9 +10,8 @@ import {
 import { FormContextReturn, FormProviderProps } from "@/lib/types";
 import { api } from "@/protocol/trpc/client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useAtomValue } from "jotai";
 import { useRouter } from "next/navigation";
-import { createContext, use, useCallback, useMemo } from "react";
+import { createContext, use, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -60,14 +58,6 @@ export function CenterFormProvider({
       },
     });
 
-  const query = useAtomValue(TableSearchAtom);
-  const { data: queryData } = api.user.list.useQuery({
-    page: 1,
-    page_size: 9999,
-    query: query,
-  });
-  const data = useMemo(() => queryData?.users ?? [], [queryData]);
-
   const onSubmit = useCallback(
     async (values: CenterCreate | CenterUpdate) => {
       switch (mode) {
@@ -92,7 +82,6 @@ export function CenterFormProvider({
         mode,
         onSubmit: form.handleSubmit(onSubmit),
         isPending: isCreating || isUpdating,
-        users: data,
       }}
     >
       {children}

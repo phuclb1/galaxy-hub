@@ -4,6 +4,8 @@ from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker
 
 from internal.common.types import T
 from internal.gateway.redis_cl import RedisClient
+from internal.repository.student import StudentRepository
+from internal.repository.teams import TeamRepository
 from internal.repository.training_center import TrainingCenterRepository
 from internal.repository.user import UserRepository
 
@@ -13,6 +15,8 @@ class Registry:
     _redis_client: RedisClient
     _user_repo: UserRepository
     _center_repo: TrainingCenterRepository
+    _team_repo: TeamRepository
+    _student_repo: StudentRepository
 
     def __init__(self, pg_engine: AsyncEngine, redis_client: RedisClient):
         self._pg_engine = pg_engine
@@ -20,6 +24,8 @@ class Registry:
         # Construct the repository instances here
         self._user_repo = UserRepository(redis_client)
         self._center_repo = TrainingCenterRepository(redis_client)
+        self._team_repo = TeamRepository(redis_client)
+        self._student_repo = StudentRepository(redis_client)
 
     async def do_tx(self, tx_func: Callable[[AsyncSession], T]) -> T:
         try:
@@ -44,3 +50,9 @@ class Registry:
 
     def center_repo(self) -> TrainingCenterRepository:
         return self._center_repo
+
+    def team_repo(self) -> TeamRepository:
+        return self._team_repo
+
+    def student_repo(self) -> StudentRepository:
+        return self._student_repo

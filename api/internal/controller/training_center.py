@@ -9,7 +9,6 @@ from internal.common.schemas.training_center import (
     UpdateCenterRequest
 )
 from internal.common.types import ID
-from internal.controller.user import UserController
 from internal.repository.registry import Registry
 
 
@@ -21,7 +20,7 @@ class TrainingCenterController:
 
     async def create_center(self, create_req: CreateCenterRequest) -> CenterResponse:
         async def _create_center(session: AsyncSession):
-            user = await self.repo.user_repo().get_user_by_id(create_req.manager_id)
+            user = await self.repo.user_repo().get_user_by_id(session, create_req.manager_id)
             if user is None:
                 raise ExceptionManagerNotFound(
                     manager_id=create_req.manager_id)
@@ -37,7 +36,7 @@ class TrainingCenterController:
 
     async def update_center(self, center_id: ID, update_req: UpdateCenterRequest) -> CenterResponse:
         async def _update_center(session: AsyncSession):
-            user = await self.repo.user_repo().get_user_by_id(update_req.manager_id)
+            user = await self.repo.user_repo().get_user_by_id(session, update_req.manager_id)
             if user is None:
                 raise ExceptionManagerNotFound(
                     manager_id=update_req.manager_id)

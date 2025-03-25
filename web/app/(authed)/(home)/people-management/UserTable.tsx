@@ -9,7 +9,7 @@ import { useAtomValue } from "jotai";
 import { api } from "@/protocol/trpc/client";
 import { useMemo, useState } from "react";
 import { useTable } from "@/components/shared/table/useTable";
-import { userTableColumns } from "@/components/shared/table/UserTableColumns";
+import { userTableColumns } from "@/components/shared/table/columns/UserTableColumns";
 import { DataTablePagination } from "@/components/shared/table/DataTablePagination";
 import { DataTable } from "@/components/shared/table/DataTable";
 import Link from "next/link";

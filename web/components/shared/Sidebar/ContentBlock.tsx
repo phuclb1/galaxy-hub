@@ -9,7 +9,14 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { ROUTE } from "@/lib/constants";
-import { BookOpenText, Building2, Home, LucideIcon } from "lucide-react";
+import {
+  BookOpenText,
+  Building2,
+  Club,
+  Home,
+  LucideIcon,
+  Users,
+} from "lucide-react";
 import Link from "next/link";
 
 type NavItem = {
@@ -29,6 +36,16 @@ const navMain: NavItem[] = [
     title: ROUTE.HOME.trainingcenter.root.title,
     icon: Building2,
     url: ROUTE.HOME.trainingcenter.root.path,
+  },
+  {
+    title: ROUTE.HOME.team.root.title,
+    icon: Club,
+    url: ROUTE.HOME.team.root.path,
+  },
+  {
+    title: ROUTE.HOME.student.root.title,
+    icon: Users,
+    url: ROUTE.HOME.student.root.path,
   },
 ];
 
