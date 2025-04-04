@@ -14,8 +14,10 @@ import {
   Building2,
   Club,
   Home,
+  KeySquare,
   LucideIcon,
   Users,
+  Warehouse,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -46,6 +48,16 @@ const navMain: NavItem[] = [
     title: ROUTE.HOME.student.root.title,
     icon: Users,
     url: ROUTE.HOME.student.root.path,
+  },
+  {
+    title: ROUTE.HOME.trainingsession.root.title,
+    icon: Warehouse,
+    url: ROUTE.HOME.trainingsession.root.path,
+  },
+  {
+    title: ROUTE.HOME.registration.root.title,
+    icon: KeySquare,
+    url: ROUTE.HOME.registration.root.path,
   },
 ];
 

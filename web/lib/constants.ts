@@ -60,7 +60,7 @@ export const ROUTE = {
     student: {
       root: {
         path: "/student-management",
-        title: "Student-management",
+        title: "Student Management",
       },
       create: {
         path: "/student-management/create",
@@ -73,6 +73,42 @@ export const ROUTE = {
       edit: {
         path: (id: Id) => `/student-management/${id}/edit`,
         title: "Edit Student",
+      },
+    },
+    trainingsession: {
+      root: {
+        path: "/training-session-management",
+        title: "Training Session Management",
+      },
+      create: {
+        path: "/training-session-management/create",
+        title: "Create Training Session",
+      },
+      detail: {
+        path: (id: Id) => `/training-session-management/${id}`,
+        title: "Training Session Detail",
+      },
+      edit: {
+        path: (id: Id) => `/training-session-management/${id}/edit`,
+        title: "Edit Training Session",
+      },
+    },
+    registration: {
+      root: {
+        path: "/registration",
+        title: "Registration",
+      },
+      create: {
+        path: "/registration/create",
+        title: "Create Registration",
+      },
+      detail: {
+        path: (id: Id) => `/registration/${id}`,
+        title: "Registration Detail",
+      },
+      edit: {
+        path: (id: Id) => `/registration/${id}/edit`,
+        title: "Edit Registration",
       },
     },
   },

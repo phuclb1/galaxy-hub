@@ -9,3 +9,4 @@ disable=
     R0801, # duplicate-code
     E1136, # unsubscriptable-object
     W0719, # broad-exception-raised
+    R0902, # too-many-instance-attributes

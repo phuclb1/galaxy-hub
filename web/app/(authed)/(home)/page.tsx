@@ -1,10 +1,16 @@
 import { TotalCoachCard } from "./TotalCard";
+import { TotalTeamCard } from "./TotalTeamCard";
+import { TotalTrainingCenterCard } from "./TotalTrainingCenterCard";
+import { TotalTrainingSessionCard } from "./TotalTrainingSessionCard";
 
 export default function Page() {
   return (
-    <div className="flex flex-row gap-2">
-      <TotalCoachCard className="w-[50%]" role="Coach" />
-      <TotalCoachCard className="w-[50%]" role="Student" />
+    <div className="grid grid-cols-2 gap-4 lg:grid-cols-2">
+      <TotalCoachCard role="Coach" />
+      <TotalCoachCard role="Student" />
+      <TotalTrainingCenterCard />
+      <TotalTeamCard />
+      <TotalTrainingSessionCard />
     </div>
   );
 }

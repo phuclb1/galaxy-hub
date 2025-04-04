@@ -19,9 +19,11 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
+import React from "react";
 
 export function CenterBlock() {
   const { form } = useTeamForm();
+  const [openCenter, setOpenCenter] = React.useState(false);
   const { data: centers = [] } = api.center.list.useQuery(
     { page: 1, page_size: 100 },
     { select: (data) => data.centers }
@@ -34,16 +36,14 @@ export function CenterBlock() {
       render={({ field }) => (
         <FormItem>
           <FormLabel>Center</FormLabel>
-          <Popover>
+          <Popover open={openCenter} onOpenChange={setOpenCenter}>
             <PopoverTrigger asChild>
               <FormControl>
                 <Input
                   type="text"
-                  value={
-                    field.value
-                      ? centers?.find((center) => center.id === field.value)
-                          ?.name
-                      : ""
+                  defaultValue={
+                    centers?.find((center) => center.id === field.value)
+                      ?.name || ""
                   }
                   readOnly
                   placeholder="Select Center"
@@ -58,7 +58,10 @@ export function CenterBlock() {
                   {centers?.map((center) => (
                     <CommandItem
                       key={center.id}
-                      onSelect={() => field.onChange(center.id)}
+                      onSelect={() => {
+                        field.onChange(center.id);
+                        setOpenCenter(false);
+                      }}
                     >
                       {center.name}
                     </CommandItem>

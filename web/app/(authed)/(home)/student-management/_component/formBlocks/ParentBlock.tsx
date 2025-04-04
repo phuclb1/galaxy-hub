@@ -19,9 +19,11 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
+import React from "react";
 
 export function ParentBlock() {
   const { form } = useStudentForm();
+  const [openParent, setOpenParent] = React.useState(false);
   const { data: parents = [] } = api.user.list.useQuery(
     { page: 1, page_size: 100 },
     { select: (data) => data.users.filter((user) => user.role == "Parent") }
@@ -34,16 +36,14 @@ export function ParentBlock() {
       render={({ field }) => (
         <FormItem>
           <FormLabel>Parent</FormLabel>
-          <Popover>
+          <Popover open={openParent} onOpenChange={setOpenParent}>
             <PopoverTrigger asChild>
               <FormControl>
                 <Input
                   type="text"
-                  value={
-                    field.value
-                      ? parents?.find((parent) => parent.id === field.value)
-                          ?.name
-                      : ""
+                  defaultValue={
+                    parents?.find((parent) => parent.id === field.value)
+                      ?.name || ""
                   }
                   readOnly
                   placeholder="Select Parent"
@@ -58,7 +58,10 @@ export function ParentBlock() {
                   {parents?.map((parent) => (
                     <CommandItem
                       key={parent.id}
-                      onSelect={() => field.onChange(parent.id)}
+                      onSelect={() => {
+                        field.onChange(parent.id);
+                        setOpenParent(false);
+                      }}
                     >
                       {parent.name}
                     </CommandItem>
