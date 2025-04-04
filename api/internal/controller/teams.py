@@ -38,12 +38,16 @@ class TeamController:
 
     async def update_team(self, team_id: ID, update_req: UpdateTeamRequest) -> TeamResponse:
         async def _update_team(session: AsyncSession):
-            coach = await self.repo.user_repo().get_user_by_id(session, update_req.coach_id)
-            if coach is None:
-                raise ExceptionCoachNotFound(coach_id=update_req.coach_id)
-            center = await self.repo.center_repo().get_center_by_id(session, update_req.center_id)
-            if center is None:
-                raise ExceptionCenterNotFound(center_id=update_req.center_id)
+            if update_req.coach_id is not None:
+                coach = await self.repo.user_repo().get_user_by_id(session, update_req.coach_id)
+                if coach is None:
+                    raise ExceptionCoachNotFound(coach_id=update_req.coach_id)
+            if update_req.center_id is not None:
+                center = await self.repo.center_repo().get_center_by_id(
+                    session, update_req.center_id)
+                if center is None:
+                    raise ExceptionCenterNotFound(
+                        center_id=update_req.center_id)
             team = await self.repo.team_repo().update_team(session, team_id, update_req)
             return team.view()
         return await self.repo.do_tx(_update_team)

@@ -74,14 +74,28 @@ export const userTableColumns = [
     header: "Created at",
     cell: ({ getValue }) => {
       const val = getValue();
-      return val ? new Date(val).toLocaleString() : null;
+      if (val) {
+        const date = new Date(val);
+        const day = String(date.getDate()).padStart(2, "0");
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const year = date.getFullYear();
+        return `${day}/${month}/${year}`;
+      }
+      return null;
     },
   }),
   col.accessor("updated_at", {
     header: "Updated at",
     cell: ({ getValue }) => {
       const val = getValue();
-      return val ? new Date(val).toLocaleString() : null;
+      if (val) {
+        const date = new Date(val);
+        const day = String(date.getDate()).padStart(2, "0");
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const year = date.getFullYear();
+        return `${day}/${month}/${year}`;
+      }
+      return null;
     },
   }),
   col.display({

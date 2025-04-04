@@ -65,4 +65,58 @@ ALTER TABLE students
     ADD CONSTRAINT fk_parent FOREIGN KEY (parent_id) REFERENCES users (id)
     ON DELETE SET NULL;
 
+CREATE TABLE IF NOT EXISTS training_sessions (
+    id              BIGINT      PRIMARY KEY,
+    name            TEXT        NOT NULL,
+    coach_id        BIGINT,
+    team_id         BIGINT,
+    start_date      TIMESTAMP   NOT NULL,
+    session_type    TEXT        NOT NULL,
+    created_at      TIMESTAMP   DEFAULT CURRENT_TIMESTAMP,
+    updated_at      TIMESTAMP   DEFAULT CURRENT_TIMESTAMP
+);
+
+ALTER TABLE training_sessions
+    ADD CONSTRAINT fk_coach_training_session FOREIGN KEY (coach_id) REFERENCES users (id)
+    ON DELETE SET NULL;
+
+ALTER TABLE training_sessions
+    ADD CONSTRAINT fk_team_training_session FOREIGN KEY (team_id) REFERENCES teams (id)
+    ON DELETE CASCADE;
+
+CREATE TABLE IF NOT EXISTS registrations (
+    id              BIGINT      PRIMARY KEY,
+    student_id      BIGINT,
+    session_id      BIGINT,
+    status          TEXT        NOT NULL,
+    created_at      TIMESTAMP   DEFAULT CURRENT_TIMESTAMP,
+    updated_at      TIMESTAMP   DEFAULT CURRENT_TIMESTAMP
+);
+
+ALTER TABLE registrations
+    ADD CONSTRAINT fk_student_registration FOREIGN KEY (student_id) REFERENCES students (id)
+    ON DELETE CASCADE;
+
+ALTER TABLE registrations
+    ADD CONSTRAINT fk_training_session FOREIGN KEY (session_id) REFERENCES training_sessions (id)
+    ON DELETE CASCADE;
+
+
+CREATE TABLE IF NOT EXISTS feedback (
+    id              BIGINT      PRIMARY KEY,
+    user_id         BIGINT,
+    session_id      BIGINT,
+    context         TEXT        NOT NULL,
+    created_at      TIMESTAMP   DEFAULT CURRENT_TIMESTAMP,
+    updated_at      TIMESTAMP   DEFAULT CURRENT_TIMESTAMP
+);
+
+ALTER TABLE feedback
+    ADD CONSTRAINT fk_user_feedback FOREIGN KEY (user_id) REFERENCES users (id)
+    ON DELETE CASCADE;
+
+ALTER TABLE feedback
+    ADD CONSTRAINT fk_training_session_feedback FOREIGN KEY (session_id) REFERENCES training_sessions (id)
+    ON DELETE CASCADE;
+
 COMMIT;

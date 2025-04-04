@@ -13,6 +13,7 @@ import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { ConfirmPopover } from "../../ConfirmPopover";
+import formatDate from "../../FormatDate";
 
 const col = createColumnHelper<Team>();
 
@@ -80,14 +81,14 @@ export const teamTableColumns = [
     header: "Created at",
     cell: ({ getValue }) => {
       const val = getValue();
-      return val ? new Date(val).toLocaleString() : null;
+      return formatDate(val);
     },
   }),
   col.accessor("updated_at", {
     header: "Updated at",
     cell: ({ getValue }) => {
       const val = getValue();
-      return val ? new Date(val).toLocaleString() : null;
+      return formatDate(val);
     },
   }),
   col.display({
@@ -106,7 +107,7 @@ export const teamTableColumns = [
         <div className="flex justify-end">
           <Tooltip>
             <TooltipTrigger asChild>
-              <Link href={ROUTE.HOME.trainingcenter.edit.path(centerId)}>
+              <Link href={ROUTE.HOME.team.edit.path(centerId)}>
                 <Button size="icon" variant="ghost">
                   <Pencil />
                 </Button>

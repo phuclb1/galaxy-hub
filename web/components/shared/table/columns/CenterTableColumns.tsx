@@ -13,6 +13,7 @@ import { useEffect, useRef } from "react";
 import { ConfirmPopover } from "../../ConfirmPopover";
 import { api } from "@/protocol/trpc/client";
 import { toast } from "sonner";
+import formatDate from "../../FormatDate";
 
 const col = createColumnHelper<TrainingCenter>();
 
@@ -69,7 +70,6 @@ export const centerTableColumns = [
     header: "Manager",
     cell: ({ getValue }) => {
       const val = getValue();
-      console.log("aaa", val);
       return val?.name || "null";
     },
   }),
@@ -77,14 +77,14 @@ export const centerTableColumns = [
     header: "Created at",
     cell: ({ getValue }) => {
       const val = getValue();
-      return val ? new Date(val).toLocaleString() : null;
+      return formatDate(val);
     },
   }),
   col.accessor("updated_at", {
     header: "Updated at",
     cell: ({ getValue }) => {
       const val = getValue();
-      return val ? new Date(val).toLocaleString() : null;
+      return formatDate(val);
     },
   }),
   col.display({

@@ -49,15 +49,20 @@ class StudentController:
         update_req: UpdateStudentRequest
     ) -> StudentResponse:
         async def _update_student(session: AsyncSession):
-            user = await self.repo.user_repo().get_user_by_id(session, update_req.user_id)
-            if user is None:
-                raise ExceptionStudentNotFound(student_id=update_req.user_id)
-            team = await self.repo.team_repo().get_team_by_id(session, update_req.team_id)
-            if team is None:
-                raise ExceptionTeamNotFound(team_id=update_req.team_id)
-            parent = await self.repo.user_repo().get_user_by_id(session, update_req.parent_id)
-            if parent is None:
-                raise ExceptionParentNotFound(parent_id=update_req.parent_id)
+            if update_req.user_id is not None:
+                user = await self.repo.user_repo().get_user_by_id(session, update_req.user_id)
+                if user is None:
+                    raise ExceptionStudentNotFound(
+                        student_id=update_req.user_id)
+            if update_req.team_id is not None:
+                team = await self.repo.team_repo().get_team_by_id(session, update_req.team_id)
+                if team is None:
+                    raise ExceptionTeamNotFound(team_id=update_req.team_id)
+            if update_req.parent_id is not None:
+                parent = await self.repo.user_repo().get_user_by_id(session, update_req.parent_id)
+                if parent is None:
+                    raise ExceptionParentNotFound(
+                        parent_id=update_req.parent_id)
             student = await self.repo.student_repo().update_student(session, student_id, update_req)
             return student.view()
         return await self.repo.do_tx(_update_student)

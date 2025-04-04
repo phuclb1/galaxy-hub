@@ -19,9 +19,11 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
+import React from "react";
 
 export function TeamBlock() {
   const { form } = useStudentForm();
+  const [openTeam, setOpenTeam] = React.useState(false);
   const { data: teams = [] } = api.team.list.useQuery(
     { page: 1, page_size: 100 },
     { select: (data) => data.teams }
@@ -34,15 +36,13 @@ export function TeamBlock() {
       render={({ field }) => (
         <FormItem>
           <FormLabel>Team</FormLabel>
-          <Popover>
+          <Popover open={openTeam} onOpenChange={setOpenTeam}>
             <PopoverTrigger asChild>
               <FormControl>
                 <Input
                   type="text"
-                  value={
-                    field.value
-                      ? teams?.find((team) => team.id === field.value)?.name
-                      : ""
+                  defaultValue={
+                    teams?.find((team) => team.id === field.value)?.name || ""
                   }
                   readOnly
                   placeholder="Select Team"
@@ -57,7 +57,10 @@ export function TeamBlock() {
                   {teams?.map((team) => (
                     <CommandItem
                       key={team.id}
-                      onSelect={() => field.onChange(team.id)}
+                      onSelect={() => {
+                        field.onChange(team.id);
+                        setOpenTeam(false);
+                      }}
                     >
                       {team.name}
                     </CommandItem>

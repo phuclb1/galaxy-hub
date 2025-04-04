@@ -19,9 +19,11 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
+import React from "react";
 
 export function CoachBlock() {
   const { form } = useTeamForm();
+  const [openCoach, setOpenCoach] = React.useState(false);
   const { data: coaches = [] } = api.user.list.useQuery(
     { page: 1, page_size: 100 },
     { select: (data) => data.users.filter((user) => user.role == "Coach") }
@@ -34,15 +36,14 @@ export function CoachBlock() {
       render={({ field }) => (
         <FormItem>
           <FormLabel>Coach</FormLabel>
-          <Popover>
+          <Popover open={openCoach} onOpenChange={setOpenCoach}>
             <PopoverTrigger asChild>
               <FormControl>
                 <Input
                   type="text"
-                  value={
-                    field.value
-                      ? coaches?.find((coach) => coach.id === field.value)?.name
-                      : ""
+                  defaultValue={
+                    coaches?.find((coach) => coach.id === field.value)?.name ||
+                    ""
                   }
                   readOnly
                   placeholder="Select Coach"
@@ -57,7 +58,10 @@ export function CoachBlock() {
                   {coaches?.map((coach) => (
                     <CommandItem
                       key={coach.id}
-                      onSelect={() => field.onChange(coach.id)}
+                      onSelect={() => {
+                        field.onChange(coach.id);
+                        setOpenCoach(false);
+                      }}
                     >
                       {coach.name}
                     </CommandItem>

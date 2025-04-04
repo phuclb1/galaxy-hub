@@ -10,22 +10,28 @@ from core.settings import settings
 from tools.uts_scheduler import scheduler
 from internal.common.schemas.user import CreateUserRequest, UserRole
 from internal.handler.auth import AuthHandler
+from internal.handler.registration import RegistrationHandler
 from internal.handler.student import StudentHandler
 from internal.handler.teams import TeamHandler
 from internal.handler.training_center import TrainingCenterHandler
+from internal.handler.training_session import TrainingSessionHandler
 from internal.handler.user import UserHandler
 from internal.controller.auth import AuthController
+from internal.controller.registration import RegistrationController
 from internal.controller.student import StudentController
 from internal.controller.teams import TeamController
 from internal.controller.training_center import TrainingCenterController
+from internal.controller.training_session import TrainingSessionController
 from internal.controller.user import UserController
 from internal.gateway.redis_cl import RedisClient
 from internal.middleware.auth import AuthMiddleware
 from internal.repository.registry import Registry
 from internal.routes.auth import AuthRoute
+from internal.routes.registration import RegistrationRoute
 from internal.routes.student import StudentRoute
 from internal.routes.teams import TeamRoute
 from internal.routes.training_center import TrainingCenterRoute
+from internal.routes.training_session import TrainingSessionRoute
 from internal.routes.user import UserRoute
 
 
@@ -38,9 +44,11 @@ class App:
             redis_client = RedisClient()
             registry = Registry(pg_engine, redis_client)
 
+            registration_controller = RegistrationController(registry)
             student_controller = StudentController(registry)
             center_controller = TrainingCenterController(registry)
             team_controller = TeamController(registry)
+            training_session_controller = TrainingSessionController(registry)
             user_controller = UserController(registry)
             auth_controller = AuthController(registry)
             try:
@@ -59,14 +67,20 @@ class App:
             auth_handler = AuthHandler(auth_controller)
             user_handler = UserHandler(user_controller)
             center_handler = TrainingCenterHandler(center_controller)
+            registration_handler = RegistrationHandler(registration_controller)
             team_handler = TeamHandler(team_controller)
             student_handler = StudentHandler(student_controller)
+            training_session_handler = TrainingSessionHandler(
+                training_session_controller)
 
             auth_router = AuthRoute(auth_handler)
             user_router = UserRoute(user_handler)
             center_router = TrainingCenterRoute(center_handler)
+            registration_router = RegistrationRoute(registration_handler)
             team_router = TeamRoute(team_handler)
             student_router = StudentRoute(student_handler)
+            training_session_router = TrainingSessionRoute(
+                training_session_handler)
 
             prefix = "/api/v1"
             self.application.include_router(
@@ -83,6 +97,14 @@ class App:
             )
             self.application.include_router(
                 student_router.router, prefix=prefix + "/students", tags=["Students"]
+            )
+            self.application.include_router(
+                training_session_router.router,
+                prefix=prefix + "/training-sessions",
+                tags=["Training Session"]
+            )
+            self.application.include_router(
+                registration_router.router, prefix=prefix + "/registration", tags=["Registration"]
             )
 
             scheduler.start()

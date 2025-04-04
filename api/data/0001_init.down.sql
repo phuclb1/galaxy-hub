@@ -6,4 +6,10 @@ DROP TABLE IF EXISTS training_centers;
 DROP TABLE IF EXISTS teams;
 
 DROP TABLE IF EXISTS students;
+
+DROP TABLE IF EXISTS training_sessions;
+
+DROP TABLE IF EXISTS registrations;
+
+DROP TABLE IF EXISTS feedback;
 COMMIT;

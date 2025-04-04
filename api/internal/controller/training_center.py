@@ -36,10 +36,11 @@ class TrainingCenterController:
 
     async def update_center(self, center_id: ID, update_req: UpdateCenterRequest) -> CenterResponse:
         async def _update_center(session: AsyncSession):
-            user = await self.repo.user_repo().get_user_by_id(session, update_req.manager_id)
-            if user is None:
-                raise ExceptionManagerNotFound(
-                    manager_id=update_req.manager_id)
+            if update_req.manager_id is not None:
+                user = await self.repo.user_repo().get_user_by_id(session, update_req.manager_id)
+                if user is None:
+                    raise ExceptionManagerNotFound(
+                        manager_id=update_req.manager_id)
             center = await self.repo.center_repo().update_center(session, center_id, update_req)
             return center.view()
         return await self.repo.do_tx(_update_center)

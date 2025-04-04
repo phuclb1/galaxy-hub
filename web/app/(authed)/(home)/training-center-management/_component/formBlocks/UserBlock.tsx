@@ -19,9 +19,11 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { useCenterForm } from "../CenterFormProvider";
+import React from "react";
 
 export function UserBlock() {
   const { form } = useCenterForm();
+  const [open, setOpen] = React.useState(false);
   const { data: users = [] } = api.user.list.useQuery(
     { page: 1, page_size: 100 },
     { select: (data) => data.users.filter((user) => user.role == "Manager") }
@@ -34,15 +36,13 @@ export function UserBlock() {
       render={({ field }) => (
         <FormItem>
           <FormLabel>User</FormLabel>
-          <Popover>
+          <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
               <FormControl>
                 <Input
                   type="text"
-                  value={
-                    field.value
-                      ? users?.find((user) => user.id === field.value)?.name
-                      : ""
+                  defaultValue={
+                    users?.find((user) => user.id === field.value)?.name || ""
                   }
                   readOnly
                   placeholder="Select Manager"
@@ -57,7 +57,10 @@ export function UserBlock() {
                   {users?.map((user) => (
                     <CommandItem
                       key={user.id}
-                      onSelect={() => field.onChange(user.id)}
+                      onSelect={() => {
+                        field.onChange(user.id);
+                        setOpen(false);
+                      }}
                     >
                       {user.name}
                     </CommandItem>

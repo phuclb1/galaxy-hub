@@ -19,9 +19,11 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
+import React from "react";
 
 export function UserBlock() {
   const { form } = useStudentForm();
+  const [openUser, setOpenUser] = React.useState(false);
   const { data: users = [] } = api.user.list.useQuery(
     { page: 1, page_size: 100 },
     { select: (data) => data.users.filter((user) => user.role == "Student") }
@@ -34,15 +36,13 @@ export function UserBlock() {
       render={({ field }) => (
         <FormItem>
           <FormLabel>User</FormLabel>
-          <Popover>
+          <Popover open={openUser} onOpenChange={setOpenUser}>
             <PopoverTrigger asChild>
               <FormControl>
                 <Input
                   type="text"
-                  value={
-                    field.value
-                      ? users?.find((user) => user.id === field.value)?.name
-                      : ""
+                  defaultValue={
+                    users?.find((user) => user.id === field.value)?.name || ""
                   }
                   readOnly
                   placeholder="Select User"
@@ -57,7 +57,10 @@ export function UserBlock() {
                   {users?.map((user) => (
                     <CommandItem
                       key={user.id}
-                      onSelect={() => field.onChange(user.id)}
+                      onSelect={() => {
+                        field.onChange(user.id);
+                        setOpenUser(false);
+                      }}
                     >
                       {user.name}
                     </CommandItem>
