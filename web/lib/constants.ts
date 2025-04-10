@@ -92,6 +92,10 @@ export const ROUTE = {
         path: (id: Id) => `/training-session-management/${id}/edit`,
         title: "Edit Training Session",
       },
+      attendance: {
+        path: (id: Id) => `/training-session-management/${id}/attendance`,
+        title: "Training Session Attendance",
+      },
     },
     registration: {
       root: {

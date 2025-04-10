@@ -1,4 +1,3 @@
-import { ROUTE } from "@/lib/constants";
 import { BackButton } from "@/components/shared/BackButton";
 import { api } from "@/protocol/trpc/server";
 import { UserFormProvider } from "../../_component/UserFormProvider";
@@ -15,7 +14,7 @@ export default async function Page({
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center">
-        <BackButton href={ROUTE.HOME.humanresource.root.path} />
+        <BackButton />
       </div>
       <UserFormProvider defaultValues={data} mode="EDIT">
         <UserForm />

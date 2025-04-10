@@ -53,7 +53,7 @@ class TrainingSessions(Base):
 
 
 class TrainingSessionFilterSet(FilterSet):
-    query = SearchFilter(TrainingSessions.id)
+    query = SearchFilter(TrainingSessions.name)
     type = SearchFilter(TrainingSessions.session_type)
     ordering = OrderingFilter(
         created_at=OrderingField(TrainingSessions.created_at),

@@ -119,4 +119,23 @@ ALTER TABLE feedback
     ADD CONSTRAINT fk_training_session_feedback FOREIGN KEY (session_id) REFERENCES training_sessions (id)
     ON DELETE CASCADE;
 
+
+CREATE TABLE IF NOT EXISTS attendance (
+    id              BIGINT      PRIMARY KEY,
+    user_id         BIGINT,
+    session_id      BIGINT,
+    status          TEXT        NOT NULL,
+    created_at      TIMESTAMP   DEFAULT CURRENT_TIMESTAMP,
+    updated_at      TIMESTAMP   DEFAULT CURRENT_TIMESTAMP
+);
+
+ALTER TABLE feedback
+    ADD CONSTRAINT fk_user_attendance FOREIGN KEY (user_id) REFERENCES users (id)
+    ON DELETE CASCADE;
+
+ALTER TABLE feedback
+    ADD CONSTRAINT fk_training_session_attendance FOREIGN KEY (session_id) REFERENCES training_sessions (id)
+    ON DELETE CASCADE;
+
+
 COMMIT;

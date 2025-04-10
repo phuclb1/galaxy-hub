@@ -1,5 +1,4 @@
 import { BackButton } from "@/components/shared/BackButton";
-import { ROUTE } from "@/lib/constants";
 import { api } from "@/protocol/trpc/server";
 import { TrainingSessionFormProvider } from "../../_component/TrainingSessionFormProvider";
 import { TrainingSessionForm } from "../../_component/TrainingSessionForm";
@@ -14,7 +13,7 @@ export default async function Page({
   return (
     <div className="flex flex-col gap-4">
       <div>
-        <BackButton href={ROUTE.HOME.trainingsession.root.path} />
+        <BackButton />
       </div>
 
       <TrainingSessionFormProvider defaultValues={data} mode="EDIT">

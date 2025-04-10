@@ -1,5 +1,4 @@
 import { BackButton } from "@/components/shared/BackButton";
-import { ROUTE } from "@/lib/constants";
 import { api } from "@/protocol/trpc/server";
 import { CenterFormProvider } from "../../_component/CenterFormProvider";
 import { CenterForm } from "../../_component/CenterForm";
@@ -14,7 +13,7 @@ export default async function Page({
   return (
     <div className="flex flex-col gap-4">
       <div>
-        <BackButton href={ROUTE.HOME.trainingcenter.root.path} />
+        <BackButton />
       </div>
 
       <CenterFormProvider defaultValues={data} mode="EDIT">
