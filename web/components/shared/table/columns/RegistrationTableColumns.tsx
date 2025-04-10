@@ -112,6 +112,8 @@ export const registrationTableColumns = [
   }),
   col.display({
     id: "action",
+    size: 100,
+    minSize: 100,
     cell: function Action({ row }) {
       const registrationId = row.original.id;
       const utils = api.useUtils();

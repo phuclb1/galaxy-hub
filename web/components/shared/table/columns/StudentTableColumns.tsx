@@ -96,6 +96,8 @@ export const studentTableColumns = [
   }),
   col.display({
     id: "action",
+    size: 100,
+    minSize: 100,
     cell: function Action({ row }) {
       const centerId = row.original.id;
       const utils = api.useUtils();

@@ -1,5 +1,4 @@
 import { BackButton } from "@/components/shared/BackButton";
-import { ROUTE } from "@/lib/constants";
 import { api } from "@/protocol/trpc/server";
 import { RegistrationFormProvider } from "../../_component/RegistrationFormProvider";
 import { RegistrationForm } from "../../_component/RegistrationForm";
@@ -14,7 +13,7 @@ export default async function Page({
   return (
     <div className="flex flex-col gap-4">
       <div>
-        <BackButton href={ROUTE.HOME.registration.root.path} />
+        <BackButton />
       </div>
 
       <RegistrationFormProvider defaultValues={data} mode="EDIT">

@@ -91,7 +91,8 @@ class UserRepository:
 
         total_res = (await session.scalars(stmt)).all()
         res = (await session.scalars(pagination_stmt)).all()
-
+        if not res:
+            res = []
         return len(total_res), res
 
     async def delete_user(self, session: AsyncSession, user_ids: list[ID]):

@@ -1,5 +1,4 @@
 import { BackButton } from "@/components/shared/BackButton";
-import { ROUTE } from "@/lib/constants";
 import { api } from "@/protocol/trpc/server";
 import { TeamFormProvider } from "../../_component/TeamFormProvider";
 import { TeamForm } from "../../_component/TeamForm";
@@ -14,7 +13,7 @@ export default async function Page({
   return (
     <div className="flex flex-col gap-4">
       <div>
-        <BackButton href={ROUTE.HOME.team.root.path} />
+        <BackButton />
       </div>
 
       <TeamFormProvider defaultValues={data} mode="EDIT">

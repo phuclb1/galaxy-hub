@@ -100,6 +100,8 @@ export const userTableColumns = [
   }),
   col.display({
     id: "action",
+    size: 100,
+    minSize: 100,
     cell: function Action({ row }) {
       const userId = row.original.id;
       const utils = api.useUtils();

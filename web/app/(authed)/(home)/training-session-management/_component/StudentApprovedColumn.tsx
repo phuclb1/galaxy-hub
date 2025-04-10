@@ -1,89 +1,97 @@
-import formatDate from "@/components/shared/FormatDate";
-import { Badge } from "@/components/ui/badge";
+import { createColumnHelper } from "@tanstack/react-table";
+import Link from "next/link";
 import { ROUTE } from "@/lib/constants";
 import { Registration } from "@/lib/schemas/registration";
-import { createColumnHelper, Table } from "@tanstack/react-table";
-import Link from "next/link";
-import { useEffect, useRef } from "react";
 
-const col = createColumnHelper<Registration>();
+export const studentApprovedColumns = (
+  handleAttendanceChange: (
+    userId: string,
+    status: "Present" | "Late" | "Absent"
+  ) => void,
+  attendanceState: Record<string, "Present" | "Late" | "Absent">
+) => {
+  const col = createColumnHelper<Registration>();
 
-const HeaderCheckbox = ({ table }: { table: Table<Registration> }) => {
-  const isAllRegistrationsSelected = table.getIsAllRowsSelected();
-  const isSelectedAllRegistrationsChange =
-    table.getToggleAllRowsSelectedHandler();
-  const isSomeRegistrationsSelected = table.getIsSomeRowsSelected();
+  return [
+    col.accessor("student", {
+      header: "Name",
+      cell: ({ getValue, row }) => {
+        const val = getValue();
+        return (
+          <Link
+            className="underline hover:no-underline"
+            href={ROUTE.HOME.student.detail.path(row.original.student.id)}
+          >
+            {val?.user?.name || "null"}
+          </Link>
+        );
+      },
+    }),
+    col.accessor("session.coach", {
+      header: "Coach",
+      cell: ({ getValue }) => {
+        const val = getValue();
+        return val?.name || "null";
+      },
+    }),
+    col.accessor("session.team", {
+      header: "Team",
+      cell: ({ getValue }) => {
+        const val = getValue();
+        return val?.name || "null";
+      },
+    }),
 
-  const headerCheckboxRef = useRef<HTMLInputElement>(null);
+    col.display({
+      id: "attendance_status",
+      size: 250,
+      header: "Attendance",
+      cell: ({ row }) => (
+        <div className="flex gap-4">
+          <label>
+            <input
+              type="radio"
+              name={`attendance-${row.original.student.user_id}`}
+              value="Present"
+              checked={
+                attendanceState[row.original.student.user_id] === "Present"
+              }
+              onChange={() =>
+                handleAttendanceChange(row.original.student.user_id, "Present")
+              }
+            />
+            Present
+          </label>
 
-  useEffect(() => {
-    if (headerCheckboxRef.current) {
-      headerCheckboxRef.current.indeterminate = isSomeRegistrationsSelected;
-    }
-  }, [isSomeRegistrationsSelected]);
+          <label>
+            <input
+              type="radio"
+              name={`attendance-${row.original.student.user_id}`}
+              value="Late"
+              checked={attendanceState[row.original.student.user_id] === "Late"}
+              onChange={() =>
+                handleAttendanceChange(row.original.student.user_id, "Late")
+              }
+            />
+            Late
+          </label>
 
-  return (
-    <input
-      ref={headerCheckboxRef}
-      checked={isAllRegistrationsSelected}
-      onChange={isSelectedAllRegistrationsChange}
-      type="checkbox"
-    />
-  );
+          <label>
+            <input
+              type="radio"
+              name={`attendance-${row.original.student.user_id}`}
+              value="Absent"
+              checked={
+                attendanceState[row.original.student.user_id] === "Absent"
+              }
+              onChange={() =>
+                handleAttendanceChange(row.original.student.user_id, "Absent")
+              }
+            />
+            Absent
+          </label>
+        </div>
+      ),
+    }),
+  ];
 };
-
-export const studentApprovedColumns = [
-  col.display({
-    id: "select",
-    header: ({ table }) => <HeaderCheckbox table={table} />,
-    cell: ({ row }) => (
-      <input
-        checked={row.getIsSelected()}
-        onChange={row.getToggleSelectedHandler()}
-        type="checkbox"
-      />
-    ),
-  }),
-  col.accessor("student", {
-    header: "Name",
-    cell: ({ getValue, row }) => {
-      const val = getValue();
-      return (
-        <Link
-          className="underline hover:no-underline"
-          href={ROUTE.HOME.registration.detail.path(row.original.id)}
-        >
-          {val?.user?.name || "null"}
-        </Link>
-      );
-    },
-  }),
-  col.accessor("session.coach", {
-    header: "Coach",
-    cell: ({ getValue }) => {
-      const val = getValue();
-
-      return val?.name || "null";
-    },
-  }),
-  col.accessor("session.team", {
-    header: "Team",
-    cell: ({ getValue }) => {
-      const val = getValue();
-
-      return val?.name || "null";
-    },
-  }),
-  col.accessor("session.start_date", {
-    header: "Start Date",
-    cell: ({ getValue }) => {
-      const val = getValue();
-
-      return formatDate(val);
-    },
-  }),
-  col.accessor("status", {
-    header: "Status",
-    cell: ({ getValue }) => <Badge variant="secondary">{getValue()}</Badge>,
-  }),
-];

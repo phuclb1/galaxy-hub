@@ -9,14 +9,18 @@ from core.database.postgres import create_pg_engine
 from core.settings import settings
 from tools.uts_scheduler import scheduler
 from internal.common.schemas.user import CreateUserRequest, UserRole
+from internal.handler.attendance import AttendanceHandler
 from internal.handler.auth import AuthHandler
+from internal.handler.feedback import FeedbackHandler
 from internal.handler.registration import RegistrationHandler
 from internal.handler.student import StudentHandler
 from internal.handler.teams import TeamHandler
 from internal.handler.training_center import TrainingCenterHandler
 from internal.handler.training_session import TrainingSessionHandler
 from internal.handler.user import UserHandler
+from internal.controller.attendance import AttendanceController
 from internal.controller.auth import AuthController
+from internal.controller.feedback import FeedbackController
 from internal.controller.registration import RegistrationController
 from internal.controller.student import StudentController
 from internal.controller.teams import TeamController
@@ -26,7 +30,9 @@ from internal.controller.user import UserController
 from internal.gateway.redis_cl import RedisClient
 from internal.middleware.auth import AuthMiddleware
 from internal.repository.registry import Registry
+from internal.routes.attendance import AttendanceRoute
 from internal.routes.auth import AuthRoute
+from internal.routes.feedback import FeedbackRoute
 from internal.routes.registration import RegistrationRoute
 from internal.routes.student import StudentRoute
 from internal.routes.teams import TeamRoute
@@ -44,6 +50,8 @@ class App:
             redis_client = RedisClient()
             registry = Registry(pg_engine, redis_client)
 
+            attendance_controller = AttendanceController(registry)
+            feedback_controller = FeedbackController(registry)
             registration_controller = RegistrationController(registry)
             student_controller = StudentController(registry)
             center_controller = TrainingCenterController(registry)
@@ -66,6 +74,8 @@ class App:
 
             auth_handler = AuthHandler(auth_controller)
             user_handler = UserHandler(user_controller)
+            attendance_handler = AttendanceHandler(attendance_controller)
+            feedback_handler = FeedbackHandler(feedback_controller)
             center_handler = TrainingCenterHandler(center_controller)
             registration_handler = RegistrationHandler(registration_controller)
             team_handler = TeamHandler(team_controller)
@@ -75,6 +85,8 @@ class App:
 
             auth_router = AuthRoute(auth_handler)
             user_router = UserRoute(user_handler)
+            attendance_router = AttendanceRoute(attendance_handler)
+            feedback_router = FeedbackRoute(feedback_handler)
             center_router = TrainingCenterRoute(center_handler)
             registration_router = RegistrationRoute(registration_handler)
             team_router = TeamRoute(team_handler)
@@ -104,7 +116,17 @@ class App:
                 tags=["Training Session"]
             )
             self.application.include_router(
+                feedback_router.router,
+                prefix=prefix + "/feedback",
+                tags=["Feedback"]
+            )
+            self.application.include_router(
                 registration_router.router, prefix=prefix + "/registration", tags=["Registration"]
+            )
+            self.application.include_router(
+                attendance_router.router,
+                prefix=prefix + "/attendance",
+                tags=["Attendance"]
             )
 
             scheduler.start()

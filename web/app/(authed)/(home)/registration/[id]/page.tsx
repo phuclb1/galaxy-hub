@@ -1,6 +1,5 @@
 import { api } from "@/protocol/trpc/server";
 import { BackButton } from "@/components/shared/BackButton";
-import { ROUTE } from "@/lib/constants";
 import { RegistrationCard } from "../_component/RegistrationCard";
 
 export default async function Page({
@@ -14,7 +13,7 @@ export default async function Page({
   return (
     <div className="flex flex-col gap-4">
       <div>
-        <BackButton href={ROUTE.HOME.humanresource.root.path} />
+        <BackButton />
       </div>
       <RegistrationCard registration={data} />
     </div>
